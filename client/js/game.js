@@ -43,6 +43,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
             this.targetCellVisible = true;
             this.hoveringTarget = false;
             this.hoveringMob = false;
+            this.hoveringPlayer = false;
             this.hoveringItem = false;
             this.hoveringCollidingTile = false;
         
@@ -377,7 +378,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                 this.targetColor = "rgba(255, 255, 255, 0.5)";
             }
         
-            if(this.hoveringMob && this.started) {
+            if((this.hoveringMob || this.hoveringPlayer) && this.started) {
                 this.setCursor("sword");
                 this.hoveringTarget = false;
                 this.targetCellVisible = false;
@@ -1748,6 +1749,14 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
             return null;
         },
 
+        getPlayerAt: function(x, y) {
+            var entity = this.getEntityAt(x, y);
+            if (entity && (entity instanceof Player) && entity != this.player) {
+                return entity;
+            }
+            return null;
+        },
+
         getNpcAt: function(x, y) {
             var entity = this.getEntityAt(x, y);
             if(entity && (entity instanceof Npc)) {
@@ -1797,6 +1806,10 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
 
         isMobAt: function(x, y) {
             return !_.isNull(this.getMobAt(x, y));
+        },
+
+        isPlayerAt: function(x, y) {
+            return !_.isNull(this.getPlayerAt(x,y));
         },
 
         isItemAt: function(x, y) {
@@ -1877,11 +1890,12 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                 this.hoveringCollidingTile = this.map.isColliding(x, y);
                 this.hoveringPlateauTile = this.player.isOnPlateau ? !this.map.isPlateau(x, y) : this.map.isPlateau(x, y);
                 this.hoveringMob = this.isMobAt(x, y);
+                this.hoveringPlayer = this.isPlayerAt(x, y);
                 this.hoveringItem = this.isItemAt(x, y);
                 this.hoveringNpc = this.isNpcAt(x, y);
                 this.hoveringChest = this.isChestAt(x, y);
         
-                if(this.hoveringMob || this.hoveringNpc || this.hoveringChest) {
+                if(this.hoveringMob || this.hoveringNpc || this.hoveringChest || this.hoveringPlayer) {
                     var entity = this.getEntityAt(x, y);
             
                     if(!entity.isHighlighted && this.renderer.supportsSilhouettes) {
@@ -1922,7 +1936,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
     	    && !this.hoveringPlateauTile) {
         	    entity = this.getEntityAt(pos.x, pos.y);
     	    
-        	    if(entity instanceof Mob) {
+        	    if(entity instanceof Mob || (entity instanceof Player && entity != this.player)) {
         	        this.makePlayerAttack(entity);
         	    }
         	    else if(entity instanceof Item) {
