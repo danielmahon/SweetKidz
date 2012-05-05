@@ -208,3 +208,13 @@ Messages.Blink = Message.extend({
                 this.item.id];
     }
 });
+
+Messages.PVP = Message.extend({
+    init: function(isPVP) {
+        this.isPVP = isPVP;
+    },
+    serialize: function() {
+        return [Types.Messages.PVP,
+                this.isPVP];
+    }
+});

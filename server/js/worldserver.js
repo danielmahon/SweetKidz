@@ -72,7 +72,8 @@ module.exports = World = cls.Class.extend({
     
             var move_callback = function(x, y) {
                 log.debug(player.name + " is moving to (" + x + ", " + y + ").");
-                
+                var isPVP = self.map.isPVP(x, y);
+                player.flagPVP(isPVP);
                 player.forEachAttacker(function(mob) {
                     var target = self.getEntityById(mob.target);
                     if(target) {

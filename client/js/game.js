@@ -1048,6 +1048,10 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                 self.player.onHasMoved(function(player) {
                     self.assignBubbleTo(player);
                 });
+
+                self.client.onPVPChange(function(pvpFlag) {
+                    self.player.flagPVP(pvpFlag);
+                });
                 
                 self.player.onArmorLoot(function(armorName) {
                     self.player.switchArmor(self.sprites[armorName]);

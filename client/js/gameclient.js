@@ -31,6 +31,7 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
             this.handlers[Types.Messages.KILL] = this.receiveKill;
             this.handlers[Types.Messages.HP] = this.receiveHitPoints;
             this.handlers[Types.Messages.BLINK] = this.receiveBlink;
+            this.handlers[Types.Messages.PVP] = this.receivePVP;
         
             this.useBison = false;
             this.enable();
@@ -371,6 +372,13 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
                 this.blink_callback(id);
             }
         },
+
+        receivePVP: function(data) {
+            var pvp = data[1];
+            if(this.pvp_callback) {
+                this.pvp_callback(pvp);
+            }
+        },
         
         onDispatched: function(callback) {
             this.dispatched_callback = callback;
@@ -462,6 +470,10 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
     
         onItemBlink: function(callback) {
             this.blink_callback = callback;
+        },
+
+        onPVPChange: function(callback) {
+            this.pvp_callback = callback;
         },
 
         sendHello: function(player) {

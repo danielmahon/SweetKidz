@@ -211,6 +211,11 @@ define(['character', 'exceptions'], function(Character, Exceptions) {
             if(this.invincibleTimeout) {
                 clearTimeout(this.invincibleTimeout);
             }
+        },
+
+        flagPVP: function(pvpFlag) {
+            console.log("**********************OMG PVP*****************************");
+            console.log(pvpFlag);
         }
     });
 
