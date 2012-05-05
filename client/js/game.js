@@ -1281,7 +1281,6 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
 
                 self.client.onEntityMove(function(id, x, y) {
                     var entity = null;
-
                     if(id !== self.playerId) {
                         entity = self.getEntityById(id);
                 
@@ -1293,7 +1292,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                             entity.idle();
                             self.makeCharacterGoTo(entity, x, y);
                         }
-                    }
+                    } 
                 });
             
                 self.client.onEntityDestroy(function(id) {

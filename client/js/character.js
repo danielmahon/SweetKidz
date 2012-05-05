@@ -326,7 +326,7 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
          * Makes the character follow another one.
          */
         follow: function(entity) {
-            if(entity) {
+            if(entity && entity.kind != 1) {
                 this.followingMode = true;
                 this.moveTo_(entity.gridX, entity.gridY);
             }

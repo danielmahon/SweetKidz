@@ -178,7 +178,6 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
             var id = data[1],
                 x = data[2],
                 y = data[3];
-        
             if(this.move_callback) {
                 this.move_callback(id, x, y);
             }
