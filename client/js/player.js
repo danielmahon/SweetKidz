@@ -19,6 +19,9 @@ define(['character', 'exceptions'], function(Character, Exceptions) {
             // modes
             this.isLootMoving = false;
             this.isSwitchingWeapon = true;
+
+            //PVP Flag
+            this.pvpFlag = false;
         },
     
         loot: function(item) {
@@ -214,8 +217,7 @@ define(['character', 'exceptions'], function(Character, Exceptions) {
         },
 
         flagPVP: function(pvpFlag) {
-            console.log("**********************OMG PVP*****************************");
-            console.log(pvpFlag);
+            this.pvpFlag = pvpFlag;
         }
     });
 

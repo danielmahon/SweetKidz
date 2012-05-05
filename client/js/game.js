@@ -1051,6 +1051,11 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
 
                 self.client.onPVPChange(function(pvpFlag) {
                     self.player.flagPVP(pvpFlag);
+                    if (pvpFlag) {
+                        self.showNotification("You are entering a PVP Zone!");
+                    } else {
+                        self.showNotification("You are entering a Safe Zone!");
+                    }
                 });
                 
                 self.player.onArmorLoot(function(armorName) {
@@ -1755,7 +1760,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
 
         getPlayerAt: function(x, y) {
             var entity = this.getEntityAt(x, y);
-            if (entity && (entity instanceof Player) && entity != this.player) {
+            if (entity && (entity instanceof Player) && entity != this.player && this.player.pvpFlag) {
                 return entity;
             }
             return null;
@@ -1940,7 +1945,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
     	    && !this.hoveringPlateauTile) {
         	    entity = this.getEntityAt(pos.x, pos.y);
     	    
-        	    if(entity instanceof Mob || (entity instanceof Player && entity != this.player)) {
+        	    if(entity instanceof Mob || (entity instanceof Player && entity != this.player && this.player.pvpFlag)) {
         	        this.makePlayerAttack(entity);
         	    }
         	    else if(entity instanceof Item) {
