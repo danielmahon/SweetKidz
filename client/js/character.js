@@ -331,8 +331,16 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
          * Makes the character follow another one.
          */
         follow: function(entity, engagingPC) {
+            /**
+            * Okay, the below is really ugly and I need to refactor this whole thing
+            * Basically, it sets an optional argument engagingPC.  This is passed in from the 
+            * engage function only.  Then, if they are engaging from the engage function, they will follow
+            * until they get to their target and attack.  The multiple or statements in the if are for other conditions
+            * such as a the entity calling is a mob (should always follow), or if they are a player and engaging for the first time
+            * or they are a player engaging a mob
+            */
             this.engagingPC = engagingPC === undefined ? false : engagingPC
-            if(entity && ((this.engagingPC && entity.kind === 1) || (this.engagingPC == false && entity.kind !== 1))) {
+            if(entity && ((this.engagingPC && this.kind === 1) || (this.engagingPC == false && entity.kind != 1) || (this.kind !== 1))) {
                 this.followingMode = true;
                 this.moveTo_(entity.gridX, entity.gridY);
             }
