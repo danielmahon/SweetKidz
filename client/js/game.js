@@ -997,7 +997,6 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                         self.client.sendOpen(self.player.target);
                         self.audioManager.playSound("chest");
                     }
-                    
                     self.player.forEachAttacker(function(attacker) {
                         if(!attacker.isAdjacentNonDiagonal(self.player)) {
                             attacker.follow(self.player);
@@ -1147,7 +1146,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                                                     entity.setGridPosition(dest.x, dest.y);
                                                 }
                                             }
-                                        
+                                            
                                             entity.forEachAttacker(function(attacker) {
                                                 if(!attacker.isAdjacentNonDiagonal(entity) && attacker.id !== self.playerId) {
                                                     attacker.follow(entity);

@@ -38,6 +38,7 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
             this.isDead = false;
             this.attackingMode = false;
             this.followingMode = false;
+            this.engagingPC = false;
     	},
 	
     	clean: function() {
@@ -235,7 +236,11 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     		    if(stop) { // Path is complete or has been interrupted
     		        this.path = null;
         			this.idle();
-                
+                    
+                    if (this.engagingPC) {
+                        this.followingMode = false;
+                        this.engagingPC = false;
+                    }
                     if(this.stop_pathing_callback) {
                         this.stop_pathing_callback(this.gridX, this.gridY);
                     }
@@ -325,8 +330,9 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
         /**
          * Makes the character follow another one.
          */
-        follow: function(entity) {
-            if(entity && entity.kind != 1) {
+        follow: function(entity, engagingPC) {
+            this.engagingPC = engagingPC === undefined ? false : engagingPC
+            if(entity && ((this.engagingPC && entity.kind === 1) || (this.engagingPC == false && entity.kind !== 1))) {
                 this.followingMode = true;
                 this.moveTo_(entity.gridX, entity.gridY);
             }
@@ -348,7 +354,11 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
         engage: function(character) {
             this.attackingMode = true;
             this.setTarget(character);
-            this.follow(character);
+            var engagingPC = false;
+            if (this.kind === 1 && character.kind === 1) {
+                engagingPC = true;
+            }
+            this.follow(character, engagingPC);
         },
     
         disengage: function() {
