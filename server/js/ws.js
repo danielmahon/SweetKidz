@@ -111,6 +111,7 @@ WS.MultiVersionWebsocketServer = Server.extend({
     },
     _connections: {},
     _counter: 0,
+    _worlds: [],
     
     init: function(port) {
         var self = this;
@@ -192,6 +193,27 @@ WS.MultiVersionWebsocketServer = Server.extend({
     
     onRequestStatus: function(status_callback) {
         this.status_callback = status_callback;
+    },
+
+    updateWorlds: function(worlds) {
+        this._worlds = worlds;
+    },
+
+    getWorld: function(player, isPVP) {
+        var world, // the one in which the player will be spawned
+        connect = function() {
+            if(world) {
+                world.connect_callback(player);
+            }
+        };
+        // simply fill each world sequentially until they are full
+        world = _.detect(worlds, function(world) {
+            //GET THE CONFIG IN HERE
+            return world.playerCount < 200 && world.pvpEnabled == isPVP;
+        });
+        world.updatePopulation();
+        connect();
+        return world;
     }
 });
 

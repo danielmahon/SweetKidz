@@ -9,9 +9,10 @@ var cls = require("./lib/class"),
     Types = require("../../shared/js/gametypes");
 
 module.exports = Player = Character.extend({
-    init: function(connection, worldServer) {
+    init: function(connection, worldServer, actualServer) {
         var self = this;
         
+        this._server = actualServer;
         this.server = worldServer;
         this.connection = connection;
 
@@ -47,13 +48,16 @@ module.exports = Player = Character.extend({
             self.resetTimeout();
             
             if(action === Types.Messages.HELLO) {
-                var name = Utils.sanitize(message[1]);
                 
+                var name = Utils.sanitize(message[1]);
+                var pvp = message[4];
                 // If name was cleared by the sanitizer, give a default name.
                 // Always ensure that the name is not longer than a maximum length.
                 // (also enforced by the maxlength attribute of the name input element).
                 self.name = (name === "") ? "lorem ipsum" : name.substr(0, 15);
                 
+                self.server = self._server.getWorld(self, pvp);
+
                 self.kind = Types.Entities.WARRIOR;
                 self.equipArmor(message[2]);
                 self.equipWeapon(message[3]);
@@ -390,5 +394,6 @@ module.exports = Player = Character.extend({
     timeout: function() {
         this.connection.sendUTF8("timeout");
         this.connection.close("Player was idle for too long");
-    }
+    },
+
 });

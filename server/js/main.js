@@ -37,28 +37,32 @@ function main(config) {
     log.info("Starting BrowserQuest game server...");
     
     server.onConnect(function(connection) {
-        var world, // the one in which the player will be spawned
-            connect = function() {
-                if(world) {
-                    world.connect_callback(new Player(connection, world));
-                }
-            };
-        
-        if(metrics) {
-            metrics.getOpenWorldCount(function(open_world_count) {
-                // choose the least populated world among open worlds
-                world = _.min(_.first(worlds, open_world_count), function(w) { return w.playerCount; });
-                connect();
-            });
-        }
-        else {
-            // simply fill each world sequentially until they are full
-            world = _.detect(worlds, function(world) {
-                return world.playerCount < config.nb_players_per_world;
-            });
-            world.updatePopulation();
-            connect();
-        }
+//        var world, // the one in which the player will be spawned
+//            connect = function() {
+//                if(world) {
+//                    world.connect_callback(new Player(connection, world));
+//                }
+//            },
+//            connection = _.detect(_connections, function(conn) {
+//                return conn === connectionId;
+//            });
+//        
+//        if(metrics) {
+//            metrics.getOpenWorldCount(function(open_world_count) {
+//                // choose the least populated world among open worlds
+//                world = _.min(_.first(worlds, open_world_count), function(w) { return w.playerCount; });
+//                connect();
+//            });
+//        }
+//        else {
+//            // simply fill each world sequentially until they are full
+//            world = _.detect(worlds, function(world) {
+//                return world.playerCount < config.nb_players_per_world;
+//            });
+//            world.updatePopulation();
+//            connect();
+//        }
+        new Player(connection, null, server);
     });
 
     server.onError(function() {
@@ -84,6 +88,17 @@ function main(config) {
         }
     });
     
+    _.each(_.range(config.pvp_worlds), function(i) {
+        var world = new WorldServer('world'+ (worlds.length + 1), config.nb_players_per_world, server, true);
+        world.run(config.map_filepath);
+        worlds.push(world);
+        if(metrics) {
+            world.onPlayerAdded(onPopulationChange);
+            world.onPlayerRemoved(onPopulationChange);
+        }
+    });
+
+    
     server.onRequestStatus(function() {
         return JSON.stringify(getWorldDistribution(worlds));
     });
@@ -93,6 +108,8 @@ function main(config) {
             onPopulationChange(); // initialize all counters to 0 when the server starts
         });
     }
+
+    server.updateWorlds(worlds);
     
     process.on('uncaughtException', function (e) {
         log.error('uncaughtException: ' + e);
