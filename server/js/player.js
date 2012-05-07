@@ -23,6 +23,7 @@ module.exports = Player = Character.extend({
         this.lastCheckpoint = null;
         this.formatChecker = new FormatChecker();
         this.disconnectTimeout = null;
+        this.pvpEnabled = false;
         this.pvpFlag = false;
         
         this.connection.listen(function(message) {
@@ -266,9 +267,11 @@ module.exports = Player = Character.extend({
     },
 
     flagPVP: function(pvpFlag) {
-        if (this.pvpFlag != pvpFlag) {
-            this.pvpFlag = pvpFlag;
-            this.send(new Messages.PVP(this.pvpFlag).serialize());
+        if (this.pvpEnabled) {
+            if (this.pvpFlag != pvpFlag) {
+                this.pvpFlag = pvpFlag;
+                this.send(new Messages.PVP(this.pvpFlag).serialize());
+            }
         }
     },
     

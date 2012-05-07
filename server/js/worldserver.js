@@ -20,7 +20,7 @@ var cls = require("./lib/class"),
 // ======= GAME SERVER ========
 
 module.exports = World = cls.Class.extend({
-    init: function(id, maxPlayers, websocketServer) {
+    init: function(id, maxPlayers, websocketServer, pvpEnabled) {
         var self = this;
 
         this.id = id;
@@ -29,7 +29,10 @@ module.exports = World = cls.Class.extend({
         this.ups = 50;
         
         this.map = null;
-        
+        this.pvpEnabled = pvpEnabled;
+        if (this.pvpEnabled === undefined)
+            this.pvpEnabled = false;
+
         this.entities = {};
         this.players = {};
         this.mobs = {};
@@ -51,6 +54,7 @@ module.exports = World = cls.Class.extend({
         
         this.onPlayerConnect(function(player) {
             player.onRequestPosition(function() {
+                player.pvpEnabled = self.pvpEnabled;
                 if(player.lastCheckpoint) {
                     return player.lastCheckpoint.getRandomPosition();
                 } else {
@@ -185,6 +189,7 @@ module.exports = World = cls.Class.extend({
             _.each(self.chestAreas, function(area) {
                 area.setNumberOfEntities(area.entities.length);
             });
+
         });
         
         var regenCount = this.ups * 2;
