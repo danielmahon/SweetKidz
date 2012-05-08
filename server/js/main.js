@@ -8,8 +8,8 @@ function main(config) {
         WorldServer = require("./worldserver"),
         Log = require('log'),
         _ = require('underscore'),
-        server = new ws.MultiVersionWebsocketServer(config.port),
         metrics = config.metrics_enabled ? new Metrics(config) : null;
+        server = new ws.MultiVersionWebsocketServer(config, metrics),
         worlds = [],
         lastTotalPlayers = 0,
         checkPopulationInterval = setInterval(function() {
@@ -62,7 +62,7 @@ function main(config) {
 //            world.updatePopulation();
 //            connect();
 //        }
-        new Player(connection, null, server);
+        new Player(connection, server);
     });
 
     server.onError(function() {

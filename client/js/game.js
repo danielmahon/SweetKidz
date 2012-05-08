@@ -1519,7 +1519,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
          * @see GameClient.sendHello
          */
         sendHello: function() {
-            this.client.sendHello(this.player);
+            this.client.sendHello(this.player, this.app.getRealmType());
         },
 
         /**

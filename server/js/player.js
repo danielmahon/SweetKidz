@@ -9,11 +9,10 @@ var cls = require("./lib/class"),
     Types = require("../../shared/js/gametypes");
 
 module.exports = Player = Character.extend({
-    init: function(connection, worldServer, actualServer) {
+    init: function(connection, connectionServer) {
         var self = this;
         
-        this._server = actualServer;
-        this.server = worldServer;
+        this._connectionServer = connectionServer;
         this.connection = connection;
 
         this._super(this.connection.id, "player", Types.Entities.WARRIOR, 0, 0, "");
@@ -56,7 +55,7 @@ module.exports = Player = Character.extend({
                 // (also enforced by the maxlength attribute of the name input element).
                 self.name = (name === "") ? "lorem ipsum" : name.substr(0, 15);
                 
-                self.server = self._server.getWorld(self, pvp);
+                self.server = self._connectionServer.getWorld(self, pvp);
 
                 self.kind = Types.Entities.WARRIOR;
                 self.equipArmor(message[2]);
