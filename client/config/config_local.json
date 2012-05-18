@@ -1,5 +1,5 @@
 {
-    "host": "localhost",
-    "port": 8000,
+    "host": "sweetkidz-server.jit.su",
+    "port": 80,
     "dispatcher": false
 }
