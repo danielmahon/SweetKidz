@@ -85,9 +85,10 @@ define(['jquery', 'area'], function($, Area) {
             this.collisions = map.collisions;
             this.high = map.high;
             this.animated = map.animated;
-            
+
             this.doors = this._getDoors(map);
             this.checkpoints = this._getCheckpoints(map);
+
         },
     
         _getDoors: function(map) {

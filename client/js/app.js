@@ -527,7 +527,11 @@ define(['jquery', 'storage'], function($, Storage) {
                     this.game.renderer.rescale(newScale);
                 }
             } 
-        }
+        },
+
+        getRealmType: function() {
+            return parseInt($('.realmType.active').val());
+        },
     });
 
     return App;

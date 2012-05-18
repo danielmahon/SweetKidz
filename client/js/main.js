@@ -149,9 +149,11 @@ define(['jquery', 'app'], function($, App) {
                     nameFromStorage = $('#playername').html(),
                     name = nameFromInput || nameFromStorage;
                 
+                $(this).closest('article').find('.realmType').addClass('active');
+                
                 app.tryStartingGame(name);
             });
-        
+                    
             document.addEventListener("touchstart", function() {},false);
             
             $('#resize-check').bind("transitionend", app.resizeUi.bind(app));

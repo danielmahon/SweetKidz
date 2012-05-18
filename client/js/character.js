@@ -38,6 +38,7 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
             this.isDead = false;
             this.attackingMode = false;
             this.followingMode = false;
+            this.engagingPC = false;
     	},
 	
     	clean: function() {
@@ -235,7 +236,11 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
     		    if(stop) { // Path is complete or has been interrupted
     		        this.path = null;
         			this.idle();
-                
+                    
+                    if (this.engagingPC) {
+                        this.followingMode = false;
+                        this.engagingPC = false;
+                    }
                     if(this.stop_pathing_callback) {
                         this.stop_pathing_callback(this.gridX, this.gridY);
                     }
@@ -325,8 +330,17 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
         /**
          * Makes the character follow another one.
          */
-        follow: function(entity) {
-            if(entity) {
+        follow: function(entity, engagingPC) {
+            /**
+            * Okay, the below is really ugly and I need to refactor this whole thing
+            * Basically, it sets an optional argument engagingPC.  This is passed in from the 
+            * engage function only.  Then, if they are engaging from the engage function, they will follow
+            * until they get to their target and attack.  The multiple or statements in the if are for other conditions
+            * such as a the entity calling is a mob (should always follow), or if they are a player and engaging for the first time
+            * or they are a player engaging a mob
+            */
+            this.engagingPC = engagingPC === undefined ? false : engagingPC
+            if(entity && ((this.engagingPC && this.kind === 1) || (this.engagingPC == false && entity.kind != 1) || (this.kind !== 1))) {
                 this.followingMode = true;
                 this.moveTo_(entity.gridX, entity.gridY);
             }
@@ -348,7 +362,11 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
         engage: function(character) {
             this.attackingMode = true;
             this.setTarget(character);
-            this.follow(character);
+            var engagingPC = false;
+            if (this.kind === 1 && character.kind === 1) {
+                engagingPC = true;
+            }
+            this.follow(character, engagingPC);
         },
     
         disengage: function() {

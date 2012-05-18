@@ -31,6 +31,7 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
             this.handlers[Types.Messages.KILL] = this.receiveKill;
             this.handlers[Types.Messages.HP] = this.receiveHitPoints;
             this.handlers[Types.Messages.BLINK] = this.receiveBlink;
+            this.handlers[Types.Messages.PVP] = this.receivePVP;
         
             this.useBison = false;
             this.enable();
@@ -177,7 +178,6 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
             var id = data[1],
                 x = data[2],
                 y = data[3];
-        
             if(this.move_callback) {
                 this.move_callback(id, x, y);
             }
@@ -371,6 +371,13 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
                 this.blink_callback(id);
             }
         },
+
+        receivePVP: function(data) {
+            var pvp = data[1];
+            if(this.pvp_callback) {
+                this.pvp_callback(pvp);
+            }
+        },
         
         onDispatched: function(callback) {
             this.dispatched_callback = callback;
@@ -464,11 +471,16 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
             this.blink_callback = callback;
         },
 
-        sendHello: function(player) {
+        onPVPChange: function(callback) {
+            this.pvp_callback = callback;
+        },
+
+        sendHello: function(player, realmType) {
             this.sendMessage([Types.Messages.HELLO,
                               player.name,
                               Types.getKindFromString(player.getSpriteName()),
-                              Types.getKindFromString(player.getWeaponName())]);
+                              Types.getKindFromString(player.getWeaponName()),
+                              realmType]);
         },
 
         sendMove: function(x, y) {

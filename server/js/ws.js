@@ -18,10 +18,12 @@ module.exports = WS;
  * Abstract Server and Connection classes
  */
 var Server = cls.Class.extend({
-    init: function(port) {
-        this.port = port;
+    init: function(config, metrics) {
+        this.config = config;
+        this.metrics = metrics;
+        this.port = config.port;
     },
-    
+  
     onConnect: function(callback) {
         this.connection_callback = callback;
     },
@@ -111,12 +113,13 @@ WS.MultiVersionWebsocketServer = Server.extend({
     },
     _connections: {},
     _counter: 0,
+    _worlds: [],
     
-    init: function(port) {
+    init: function(config, metrics) {
         var self = this;
         
-        this._super(port);
-        
+        this._super(config, metrics);
+               
         this._httpServer = http.createServer(function(request, response) {
             var path = url.parse(request.url).pathname;
             switch(path) {
@@ -131,8 +134,8 @@ WS.MultiVersionWebsocketServer = Server.extend({
             }
             response.end();
         });
-        this._httpServer.listen(port, function() {
-            log.info("Server is listening on port "+port);
+        this._httpServer.listen(self.port, function() {
+            log.info("Server is listening on port "+ self.port);
         });
         
         this._miksagoServer = wsserver.createServer();
@@ -192,6 +195,37 @@ WS.MultiVersionWebsocketServer = Server.extend({
     
     onRequestStatus: function(status_callback) {
         this.status_callback = status_callback;
+    },
+
+    updateWorlds: function(worlds) {
+        this._worlds = worlds;
+    },
+
+    getWorld: function(player, isPVP) {
+        var world, // the one in which the player will be spawned
+        connect = function() {
+            if(world) {
+                world.connect_callback(player);
+            }
+        },
+        self = this;
+        
+        if(self.metrics) {
+            this.metrics.getOpenWorldCount(function(open_world_count) {
+                // choose the least populated world among open worlds
+                world = _.min(_.first(worlds, open_world_count), function(w) { if (w.pvpEnabled == isPVP) {return w.playerCount;} });
+                connect();
+            });
+        }
+        else {
+            // simply fill each world sequentially until they are full
+            world = _.detect(worlds, function(world) {
+                return world.playerCount < self.config.nb_players_per_world && world.pvpEnabled == isPVP;
+            });
+            world.updatePopulation();
+            connect();
+        }
+        return world;
     }
 });
 

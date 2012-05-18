@@ -20,7 +20,7 @@ var cls = require("./lib/class"),
 // ======= GAME SERVER ========
 
 module.exports = World = cls.Class.extend({
-    init: function(id, maxPlayers, websocketServer) {
+    init: function(id, maxPlayers, websocketServer, pvpEnabled) {
         var self = this;
 
         this.id = id;
@@ -29,7 +29,10 @@ module.exports = World = cls.Class.extend({
         this.ups = 50;
         
         this.map = null;
-        
+        this.pvpEnabled = pvpEnabled;
+        if (this.pvpEnabled === undefined)
+            this.pvpEnabled = false;
+
         this.entities = {};
         this.players = {};
         this.mobs = {};
@@ -51,6 +54,7 @@ module.exports = World = cls.Class.extend({
         
         this.onPlayerConnect(function(player) {
             player.onRequestPosition(function() {
+                player.pvpEnabled = self.pvpEnabled;
                 if(player.lastCheckpoint) {
                     return player.lastCheckpoint.getRandomPosition();
                 } else {
@@ -65,14 +69,16 @@ module.exports = World = cls.Class.extend({
             if(!player.hasEnteredGame) {
                 self.incrementPlayerCount();
             }
-            
+            //Set initial PVP Flag
+            player.flagPVP(self.map.isPVP(player.x, player.y));
+
             // Number of players in this world
             self.pushToPlayer(player, new Messages.Population(self.playerCount));
             self.pushRelevantEntityListTo(player);
     
             var move_callback = function(x, y) {
                 log.debug(player.name + " is moving to (" + x + ", " + y + ").");
-                
+                player.flagPVP(self.map.isPVP(x, y));
                 player.forEachAttacker(function(mob) {
                     var target = self.getEntityById(mob.target);
                     if(target) {
@@ -93,7 +99,6 @@ module.exports = World = cls.Class.extend({
             
             player.onZone(function() {
                 var hasChangedGroups = self.handleEntityGroupMembership(player);
-                
                 if(hasChangedGroups) {
                     self.pushToPreviousGroups(player, new Messages.Destroy(player));
                     self.pushRelevantEntityListTo(player);
@@ -184,6 +189,7 @@ module.exports = World = cls.Class.extend({
             _.each(self.chestAreas, function(area) {
                 area.setNumberOfEntities(area.entities.length);
             });
+
         });
         
         var regenCount = this.ups * 2;

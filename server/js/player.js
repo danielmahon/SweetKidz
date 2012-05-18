@@ -9,10 +9,10 @@ var cls = require("./lib/class"),
     Types = require("../../shared/js/gametypes");
 
 module.exports = Player = Character.extend({
-    init: function(connection, worldServer) {
+    init: function(connection, connectionServer) {
         var self = this;
         
-        this.server = worldServer;
+        this._connectionServer = connectionServer;
         this.connection = connection;
 
         this._super(this.connection.id, "player", Types.Entities.WARRIOR, 0, 0, "");
@@ -23,6 +23,8 @@ module.exports = Player = Character.extend({
         this.lastCheckpoint = null;
         this.formatChecker = new FormatChecker();
         this.disconnectTimeout = null;
+        this.pvpEnabled = false;
+        this.pvpFlag = false;
         
         this.connection.listen(function(message) {
             var action = parseInt(message[0]);
@@ -45,13 +47,18 @@ module.exports = Player = Character.extend({
             self.resetTimeout();
             
             if(action === Types.Messages.HELLO) {
-                var name = Utils.sanitize(message[1]);
                 
+                var name = Utils.sanitize(message[1]);
+                var pvp = message[4];
+                // force PVP until I can figure out what is going on with the select box
+                // var pvp = 1;
                 // If name was cleared by the sanitizer, give a default name.
                 // Always ensure that the name is not longer than a maximum length.
                 // (also enforced by the maxlength attribute of the name input element).
                 self.name = (name === "") ? "lorem ipsum" : name.substr(0, 15);
                 
+                self.server = self._connectionServer.getWorld(self, pvp);
+
                 self.kind = Types.Entities.WARRIOR;
                 self.equipArmor(message[2]);
                 self.equipWeapon(message[3]);
@@ -127,7 +134,7 @@ module.exports = Player = Character.extend({
                 if(mob) {
                     var dmg = Formulas.dmg(self.weaponLevel, mob.armorLevel);
                     
-                    if(dmg > 0) {
+                    if(dmg > 0 && mob.type != "player") {
                         mob.receiveDamage(dmg, self.id);
                         self.server.handleMobHate(mob.id, self.id, dmg);
                         self.server.handleHurtEntity(mob, self, dmg);
@@ -263,6 +270,15 @@ module.exports = Player = Character.extend({
     send: function(message) {
         this.connection.send(message);
     },
+
+    flagPVP: function(pvpFlag) {
+        if (this.pvpEnabled) {
+            if (this.pvpFlag != pvpFlag) {
+                this.pvpFlag = pvpFlag;
+                this.send(new Messages.PVP(this.pvpFlag).serialize());
+            }
+        }
+    },
     
     broadcast: function(message, ignoreSelf) {
         if(this.broadcast_callback) {
@@ -379,5 +395,6 @@ module.exports = Player = Character.extend({
     timeout: function() {
         this.connection.sendUTF8("timeout");
         this.connection.close("Player was idle for too long");
-    }
+    },
+
 });

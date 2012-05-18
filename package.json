@@ -1,14 +1,21 @@
 {
-    "name": "BrowserQuest"
-  , "version": "0.0.1"
-  , "private": false 
-  , "dependencies": {
-    "underscore": ">0"
-    , "log": ">0"
-    , "bison": ">0"
-    , "websocket": ">0"
-    , "websocket-server": ">0"
-    , "sanitizer": ">0"
-    , "memcache": ">0"
+  "name": "SweetKidzServer",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+    "underscore": ">0",
+    "log": ">0",
+    "bison": ">0",
+    "websocket": ">0",
+    "websocket-server": ">0",
+    "sanitizer": ">0",
+    "memcache": ">0"
+  },
+  "subdomain": "sweetkidz-server",
+  "scripts": {
+    "start": "server/js/main.js"
+  },
+  "engines": {
+    "node": "0.6.x"
   }
 }
