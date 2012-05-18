@@ -530,7 +530,7 @@ define(['jquery', 'storage'], function($, Storage) {
         },
 
         getRealmType: function() {
-            return parseInt($("#realmType").val());
+            return parseInt($('.realmType.active').val());
         },
     });
 

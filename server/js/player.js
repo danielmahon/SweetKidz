@@ -49,9 +49,9 @@ module.exports = Player = Character.extend({
             if(action === Types.Messages.HELLO) {
                 
                 var name = Utils.sanitize(message[1]);
-                // var pvp = message[4];
+                var pvp = message[4];
                 // force PVP until I can figure out what is going on with the select box
-                var pvp = 1;
+                // var pvp = 1;
                 // If name was cleared by the sanitizer, give a default name.
                 // Always ensure that the name is not longer than a maximum length.
                 // (also enforced by the maxlength attribute of the name input element).
