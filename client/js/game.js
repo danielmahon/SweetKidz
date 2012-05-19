@@ -67,7 +67,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
             this.spriteNames = ["hand", "sword", "loot", "target", "talk", "sparks", "shadow16", "rat", "skeleton", "skeleton2", "spectre", "boss", "deathknight", 
                                 "ogre", "crab", "snake", "eye", "bat", "goblin", "wizard", "guard", "king", "villagegirl", "villager", "coder", "agent", "rick", "scientist", "nyan", "priest", 
                                 "sorcerer", "octocat", "beachnpc", "forestnpc", "desertnpc", "lavanpc", "clotharmor", "leatherarmor", "mailarmor", 
-                                "platearmor", "redarmor", "goldenarmor", "firefox", "death", "sword1", "axe", "chest",
+                                "platearmor", "redarmor", "goldenarmor", "gmarmor", "firefox", "death", "sword1", "axe", "chest",
                                 "sword2", "redsword", "bluesword", "goldensword", "item-sword2", "item-axe", "item-redsword", "item-bluesword", "item-goldensword", "item-leatherarmor", "item-mailarmor", 
                                 "item-platearmor", "item-redarmor", "item-goldenarmor", "item-flask", "item-cake", "item-burger", "morningstar", "item-morningstar", "item-firepotion"];
         },
@@ -152,6 +152,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
             var self = this;
         
             Types.forEachArmorKind(function(kind, kindName) {
+            	// log.debug(kind+' , '+kindName);
                 self.sprites[kindName].createHurtSprite();
             });
         },
@@ -793,9 +794,9 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                     self.storage.savePlayer(self.renderer.getPlayerImage(),
                                             self.player.getSpriteName(),
                                             self.player.getWeaponName());
-                    self.showNotification("Welcome to BrowserQuest!");
+                    self.showNotification("Welcome to SweetKidz!");
                 } else {
-                    self.showNotification("Welcome back to BrowserQuest!");
+                    self.showNotification("Welcome back to SweetKidz!");
                     self.storage.setPlayerName(name);
                 }
         

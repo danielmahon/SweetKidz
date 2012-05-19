@@ -50,22 +50,31 @@ module.exports = Player = Character.extend({
                 
                 var name = Utils.sanitize(message[1]);
                 var pvp = message[4];
-                // force PVP until I can figure out what is going on with the select box
-                // var pvp = 1;
                 // If name was cleared by the sanitizer, give a default name.
                 // Always ensure that the name is not longer than a maximum length.
                 // (also enforced by the maxlength attribute of the name input element).
                 self.name = (name === "") ? "lorem ipsum" : name.substr(0, 15);
                 
                 self.server = self._connectionServer.getWorld(self, pvp);
-
+				
                 self.kind = Types.Entities.WARRIOR;
-                self.equipArmor(message[2]);
-                self.equipWeapon(message[3]);
+ 								
+				// set GM properties
+				if (self.name === 'Jaha') {
+					log.debug('GM '+name+' has entered the game.');
+					self.isGM = true;
+                	self.equipArmor(Types.Entities.GMARMOR);
+                	self.equipWeapon(Types.Entities.GOLDENSWORD);
+                	// console.log(self);
+				} else {
+                	self.equipArmor(message[2]);
+                	self.equipWeapon(message[3]);
+				}
+                
                 self.orientation = Utils.randomOrientation();
                 self.updateHitPoints();
                 self.updatePosition();
-                
+
                 self.server.addPlayer(self);
                 self.server.enter_callback(self);
 
@@ -157,7 +166,7 @@ module.exports = Player = Character.extend({
             }
             else if(action === Types.Messages.LOOT) {
                 var item = self.server.getEntityById(message[1]);
-                
+
                 if(item) {
                     var kind = item.kind;
                     

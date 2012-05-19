@@ -57,6 +57,7 @@ Types = {
         PLATEARMOR: 24,
         REDARMOR: 25,
         GOLDENARMOR: 26,
+        GMARMOR: 27,
         
         // Objects
         FLASK: 35,
@@ -133,6 +134,7 @@ var kinds = {
     platearmor: [Types.Entities.PLATEARMOR, "armor"],
     redarmor: [Types.Entities.REDARMOR, "armor"],
     goldenarmor: [Types.Entities.GOLDENARMOR, "armor"],
+    gmarmor: [Types.Entities.GMARMOR, "armor"],
 
     flask: [Types.Entities.FLASK, "object"],
     cake: [Types.Entities.CAKE, "object"],
@@ -178,7 +180,8 @@ Types.rankedArmors = [
     Types.Entities.MAILARMOR,
     Types.Entities.PLATEARMOR,
     Types.Entities.REDARMOR,
-    Types.Entities.GOLDENARMOR
+    Types.Entities.GOLDENARMOR,
+    Types.Entities.GMARMOR
 ];
 
 Types.getWeaponRank = function(weaponKind) {

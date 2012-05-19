@@ -122,6 +122,10 @@ define(['mobs', 'items', 'npcs', 'warrior', 'chest'], function(Mobs, Items, NPCs
         return new Items.GoldenArmor(id);
     };
 
+    EntityFactory.builders[Types.Entities.GMARMOR] = function(id) {
+        return new Items.GMArmor(id);
+    };
+
     EntityFactory.builders[Types.Entities.FLASK] = function(id) {
         return new Items.Flask(id);
     };
