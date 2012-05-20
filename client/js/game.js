@@ -114,13 +114,13 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
         },
     
         initPlayer: function() {
-            if(this.storage.hasAlreadyPlayed()) {
-                this.player.setSpriteName(this.storage.data.player.armor);
-                this.player.setWeaponName(this.storage.data.player.weapon);
-            }
-        
-        	this.player.setSprite(this.sprites[this.player.getSpriteName()]);
-        	this.player.idle();
+//             if(this.storage.hasAlreadyPlayed()) {
+// //                this.player.setSpriteName(this.storage.data.player.armor);
+//                 this.player.setWeaponName(this.storage.data.player.weapon);
+//             }
+//         
+// //           this.player.setSprite(this.sprites[this.player.getSpriteName()]);
+//          this.player.idle();
         
     	    log.debug("Finished initPlayer");
         },
@@ -765,7 +765,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                 }
             });
         
-            this.client.onWelcome(function(id, name, x, y, hp) {
+            this.client.onWelcome(function(id, name, x, y, hp, armor, weapon, inventory) {
                 log.info("Received player ID from server : "+ id);
                 self.player.id = id;
                 self.playerId = id;
@@ -782,7 +782,18 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
             
                 self.addEntity(self.player);
                 self.player.dirtyRect = self.renderer.getEntityBoundingRect(self.player);
+                
 
+                self.player.setSpriteName( Types.getNameFromId(armor));
+                console.log("weapon: " + Types.getNameFromId(weapon))
+                self.player.setWeaponName(Types.getNameFromId(weapon));
+  	            self.player.setSprite(self.sprites[self.player.getSpriteName()]);
+  	            self.player.idle();
+  	            
+  	            if(inventory != null){
+  	                self.player.inventory = inventory;
+                }
+  	           
                 setTimeout(function() {
                     self.tryUnlockingAchievement("STILL_ALIVE");
                 }, 1500);

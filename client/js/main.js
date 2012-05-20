@@ -135,7 +135,17 @@ define(['jquery', 'app'], function($, App) {
                app.openPopup('facebook', url);
                return false;
             });
-        
+            
+            $('#equipment_weapon').click(function() {
+                app.showMessage( $('#equipment_weapon').data("name"));
+                return false;
+            });
+
+            $('#equipment_armor').click(function() {
+                app.showMessage( $('#equipment_armor').data("name"));
+                return false;
+            });
+                        
             var data = app.storage.data;
     		if(data.hasAlreadyPlayed) {
     		    if(data.player.name && data.player.name !== "") {

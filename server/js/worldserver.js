@@ -15,7 +15,9 @@ var cls = require("./lib/class"),
     Messages = require('./message'),
     Properties = require("./properties"),
     Utils = require("./utils"),
-    Types = require("../../shared/js/gametypes");
+    Types = require("../../shared/js/gametypes"),
+    cradle = require('cradle'),
+    db = new(cradle.Connection)('192.168.1.93',5984).database('mmorpg');
 
 // ======= GAME SERVER ========
 
@@ -48,20 +50,15 @@ module.exports = World = cls.Class.extend({
         this.playerCount = 0;
         
         this.zoneGroupsReady = false;
-        
+
         this.onPlayerConnect(function(player) {
-            player.onRequestPosition(function() {
-                if(player.lastCheckpoint) {
-                    return player.lastCheckpoint.getRandomPosition();
-                } else {
-                    return self.map.getRandomStartingPosition();
-                }
-            });
-        });
         
+
+         });
+
         this.onPlayerEnter(function(player) {
             log.info(player.name + " has joined "+ self.id);
-            
+   
             if(!player.hasEnteredGame) {
                 self.incrementPlayerCount();
             }
@@ -109,6 +106,14 @@ module.exports = World = cls.Class.extend({
             });
     
             player.onExit(function() {
+
+                // Player has exited save info to DB
+                db.save("player_" + player.name, 
+                     player.getJSON()
+                 , function (err, res) {
+                     log.debug("saved to database" + err + res);
+                 });               
+                  
                 log.info(player.name + " has left the game.");
                 self.removePlayer(player);
                 self.decrementPlayerCount();

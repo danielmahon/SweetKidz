@@ -167,9 +167,12 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
                 x = data[3],
                 y = data[4],
                 hp = data[5];
+                armor = data[6];
+                weapon = data[7];
+                inventory = eval('(' + data[8] + ')');
         
             if(this.welcome_callback) {
-                this.welcome_callback(id, name, x, y, hp);
+                this.welcome_callback(id, name, x, y, hp, armor, weapon, inventory);
             }
         },
     
@@ -510,6 +513,7 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
         },
     
         sendLoot: function(item) {
+            console.log("looting...");
             this.sendMessage([Types.Messages.LOOT,
                               item.id]);
         },

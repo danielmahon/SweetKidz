@@ -385,6 +385,29 @@ define(['jquery', 'storage'], function($, Storage) {
             if(this.game.started) {
                 $('#parchment').removeClass().addClass('about');
                 $('body').toggleClass('about');
+                // Add equipment
+                var scale = this.game.renderer.getScaleFactor();
+                var getIconPath = function(spriteName) {
+                        return 'img/'+ scale +'/item-' + spriteName + '.png';
+                    },
+                    //items = this.game.player.getInventoryItems(),
+                    weapon = this.game.player.getWeaponName(),
+                    armor = this.game.player.getSpriteName(),
+                    weaponPath = getIconPath(weapon),
+                    armorPath = getIconPath(armor);
+                    
+
+                $('#equipment_weapon').css('background-image', 'url("' + weaponPath + '")');
+                $('#equipment_weapon').data("name",weapon);
+                $('#equipment_armor').css('background-image', 'url("' + armorPath + '")');
+                $('#equipment_armor').data("name",armor);
+                for(i = 1; i < 8; ++i){
+       
+                    item = Types.getNameFromId(this.game.player.inventory[i -1]);
+                    itemPath = getIconPath(item);
+                    $('#inventory_' + i).css('background-image', 'url("' + itemPath + '")');
+                }
+
                 if(!this.game.player) {
                     $('body').toggleClass('death');
                 }

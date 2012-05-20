@@ -243,6 +243,16 @@ Types.getKindFromString = function(kind) {
     }
 };
 
+Types.getNameFromId = function(id){
+
+    for(var k in kinds) {
+        if(kinds[k][0] == id){
+            return(k);
+        }
+    }
+    
+};
+
 Types.getKindAsString = function(kind) {
     for(var k in kinds) {
         if(kinds[k][0] === kind) {

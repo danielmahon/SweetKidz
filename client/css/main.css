@@ -556,7 +556,7 @@ footer, header, hgroup, menu, nav, section {
         #close-credits {margin:45px auto 0 auto;text-align:center;clear:both;font-size:20px;color:#373737;}
         #sharing {width:240px;}
         
-        /*About*/
+        /*Inventory (About)*/
         #about h1 span.title {max-width:400px;display:inline-block;line-height:39px;margin-top:-90px;position:relative;}
         #close-about {margin:230px auto 0 auto;text-align:center;clear:both;font-size:20px;color:#373737;}
         #about #game-desc {font-size:28px;text-align:center;max-width:70%;margin:30px auto;line-height:34px;}
@@ -568,7 +568,10 @@ footer, header, hgroup, menu, nav, section {
         #about .link {clear:both;font-size:20px;margin:30px 0;display:block;text-align:left;line-height:16px;}
         #about .link a {color:#2e7fdd;text-decoration:none;}
         #about .link .ext-link {height:18px;width:18px;background-position:-1197px -516px;display:block;float:left;margin-right:10px;}
+        #equipment_weapon {width:32px;height:32px;background-size:192px;background-position:-64px;}
+        #equipment_armor {width:32px;height:32px;background-size:192px;background-position:-64px;}
         
+        .inventory {width:32px;height:32px;background-size:192px;background-position:-64px;border:2px solid black;float:left;margin:1px;}
         .animate .parchment-middle {-moz-animation:parchmiddle3 1s ease 1;-webkit-animation:parchmiddle3 1s ease 1;-o-animation:parchmiddle3 1s ease 1;-ms-animation:parchmiddle3 1s ease 1;}
 
         .game .parchment-middle {background-position: -633px -882px;}
