@@ -92,8 +92,10 @@ function(Camera, Item, Character, Player, Timer) {
             this.camera = new Camera(this);
             this.camera.rescale();
         
-            this.canvas.width = this.camera.gridW * this.tilesize * this.scale;
-            this.canvas.height = this.camera.gridH * this.tilesize * this.scale;
+            // this.canvas.width = this.camera.gridW * this.tilesize * this.scale;            // this.canvas.height = this.camera.gridH * this.tilesize * this.scale;
+            this.canvas.width = this.camera.gridW * this.tilesize * this.scale;            this.canvas.height = this.camera.gridH * this.tilesize * this.scale;
+            
+            
             log.debug("#entities set to "+this.canvas.width+" x "+this.canvas.height);
         
             this.backcanvas.width = this.canvas.width;
