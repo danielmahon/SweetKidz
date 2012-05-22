@@ -1,10 +1,10 @@
 
 define(['infomanager', 'bubble', 'renderer', 'map', 'animation', 'sprite', 'tile',
         'warrior', 'gameclient', 'audio', 'updater', 'transition', 'pathfinder',
-        'item', 'mob', 'npc', 'player', 'character', 'chest', 'mobs', 'exceptions', 'config', '../../shared/js/gametypes'],
+        'item', 'mob', 'npc', 'player', 'character', 'chest', 'mobs', 'exceptions', 'config', 'chathandler', '../../shared/js/gametypes'],
 function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedTile,
          Warrior, GameClient, AudioManager, Updater, Transition, Pathfinder,
-         Item, Mob, Npc, Player, Character, Chest, Mobs, Exceptions, config) {
+         Item, Mob, Npc, Player, Character, Chest, Mobs, Exceptions, config, ChatHandler) {
     
     var Game = Class.extend({
         init: function(app) {
@@ -49,6 +49,9 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
         
             // combat
             this.infoManager = new InfoManager(this);
+            
+            // chat commands
+            this.chathandler = new ChatHandler(this);
         
             // zoning
             this.currentZoning = null;
@@ -1467,10 +1470,12 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                 });
             
                 self.client.onChatMessage(function(entityId, message) {
-                    var entity = self.getEntityById(entityId);
-                    self.createBubble(entityId, message);
-                    self.assignBubbleTo(entity);
-                    self.audioManager.playSound("chat");
+                	if(!self.chathandler.processReceiveMessage(entityId, message)) {
+	                    var entity = self.getEntityById(entityId);
+	                    self.createBubble(entityId, message);
+	                    self.assignBubbleTo(entity);
+	                    self.audioManager.playSound("chat");
+	                }
                 });
             
                 self.client.onPopulationChange(function(worldPlayers, totalPlayers) {
@@ -2207,7 +2212,9 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
         },
     
         say: function(message) {
-            this.client.sendChat(message);
+            if(!this.chathandler.processSendMessage(message)) {
+            	this.client.sendChat(message);
+            }
         },
     
         createBubble: function(id, message) {

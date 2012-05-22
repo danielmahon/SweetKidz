@@ -318,7 +318,7 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
             var id = data[1],
                 dmg = data[2];
         
-            if(this.dmg_callback) {
+            if(this.dmg_callback) {
                 this.dmg_callback(id, dmg);
             }
         },
