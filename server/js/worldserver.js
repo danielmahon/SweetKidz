@@ -300,7 +300,7 @@ module.exports = World = cls.Class.extend({
         
         // Push this message to all groups which are not going to be updated anymore,
         // since the player left them.
-        _.each(player.recentlyLeftGroups, function(id) {
+        _.each(player.recentlyLeftGroups, function(id) {
             self.pushToGroup(id, message);
         });
         player.recentlyLeftGroups = [];
@@ -314,7 +314,7 @@ module.exports = World = cls.Class.extend({
         }
     },
     
-    processQueues: function() {
+    processQueues: function() {
         var self = this,
             connection;
 
@@ -521,7 +521,7 @@ module.exports = World = cls.Class.extend({
     },
     
     broadcastAttacker: function(character) {
-        if(character) {
+        if(character) {
             this.pushToAdjacentGroups(character.group, character.attack(), character.id);
         }
         if(this.attack_callback) {

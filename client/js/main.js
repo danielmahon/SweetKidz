@@ -8,7 +8,7 @@ define(['jquery', 'app'], function($, App) {
             app.center();
             
             // if app is starting from localhost, set var for config
-            if (location.hostname === 'localhost') {
+            if (location.hostname === 'localhost' || location.hostname === '192.168.1.83') {
             	app.isLocal = true;
             }
         

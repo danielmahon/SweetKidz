@@ -2258,6 +2258,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
             }
         },
     
+/*
         assignGlobalBubble: function(id) {
             var bubble = this.bubbleManager.getBubbleById(id);
 
@@ -2280,6 +2281,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                 bubble.element.css('color', this.globalChatColor);
             }
         },
+*/
 
         restart: function() {
             log.debug("Beginning restart");

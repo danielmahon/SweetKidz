@@ -193,6 +193,27 @@ footer, header, hgroup, menu, nav, section {
     .achievement-sharing a {display:block;float:left;}
     
 	#bubbles a {pointer-events:auto;text-decoration:none;color:#fcda5c;}
+	
+	#chatLog {
+		position: absolute;
+		bottom: 42px;
+		left: 10px;
+		width: 20%;
+		background: rgba(45,45,45,0.6);
+		padding: 5px;
+		overflow-y: scroll;
+		overflow-x: hide;
+		max-height: 60px;
+	}
+	#chatLog p {
+		margin-bottom: 3px;
+		padding: 0;
+		line-height: 1;
+		color: rgba(255,255,255,1);
+	}
+	#chatLog p .name {
+		font-weight: bold;
+	}
 
     #create-new span:hover, #cancel span:hover {cursor:pointer;color:#d83939;}
     #create-new span span {color:#b2af9b;}

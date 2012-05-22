@@ -1,10 +1,12 @@
-define(function() {
+define(['jquery'], function($) {
 
     var ChatHandler = Class.extend({
 
         init: function(game) {
             this.self = this;
             this.game = game;
+            this.chatLog = $('#chatLog');
+            this.chatHistory = [];
         },
 
         /**
@@ -47,8 +49,11 @@ define(function() {
                         // World chat
                         "/w ": function(entityId, message) {
                             messageId = Math.floor(Math.random() * 10000);
-                            self.game.createBubble(messageId, message);
-                            self.game.assignGlobalBubble(messageId);
+                            // self.game.createBubble(messageId, message);
+                            // self.game.assignGlobalBubble(messageId);
+                            console.log(message);
+                            // self.game.assignBubbleTo(messageId);
+                            self.addToChatLog(message);
                             return true;
                         }
                         // ,
@@ -74,6 +79,7 @@ define(function() {
                 };
             if (pattern in commandPatterns[type]) {
                 if (typeof commandPatterns[type][pattern] == "function") {
+                	console.log(type);
                     switch(type) {
                         case 'senders':
                             return commandPatterns[type][pattern](message.substring(3));
@@ -84,6 +90,19 @@ define(function() {
                 }
             }
             return false;
+        },
+        
+        /**
+         * Adds message to chat window.
+         *
+         * @param string message
+         */
+        addToChatLog: function(message) {
+        	var self = this;
+        	this.chatHistory.push({message:message});
+        	var el = $("<p>"+message+"</p>");
+            $(el).appendTo(this.chatLog);
+            $(this.chatLog).scrollTop(9999);
         }
 
     });
