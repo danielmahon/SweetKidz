@@ -6,7 +6,8 @@ var cls = require("./lib/class"),
     Properties = require("./properties"),
     Formulas = require("./formulas"),
     check = require("./format").check,
-    Types = require("../../shared/js/gametypes");
+    Types = require("../../shared/js/gametypes"),
+    email = require('./node_mailer');
 
 module.exports = Player = Character.extend({
     init: function(connection, connectionServer) {
@@ -54,6 +55,9 @@ module.exports = Player = Character.extend({
                 // Always ensure that the name is not longer than a maximum length.
                 // (also enforced by the maxlength attribute of the name input element).
                 self.name = (name === "") ? "lorem ipsum" : name.substr(0, 15);
+                
+                // email notification of player joining game
+                self.email('@', name+' entered SweetKidz.', name+' entered SweetKidz.');
                 
                 self.server = self._connectionServer.getWorld(self, pvp);
 				
@@ -405,5 +409,24 @@ module.exports = Player = Character.extend({
         this.connection.sendUTF8("timeout");
         this.connection.close("Player was idle for too long");
     },
+    
+    email: function(to, subject, body) {
+    	email.send({
+	      host : "smtp.gmail.com",              // smtp server hostname
+	      port : "465",                     // smtp server port
+	      ssl: true,                        // for SSL support - REQUIRES NODE v0.3.x OR HIGHER
+	      domain : "",            // domain used by client to identify itself to server
+	      to : to,
+	      from : "@",
+	      subject : subject,
+	      body: body,
+	      authentication : "login",        // auth login is supported; anything else is no auth
+	      username : "@",        // username
+	      password : ""         // password
+	    },
+	    function(err, result){
+	      if(err){ console.log(err); }
+	    });
+	}
 
 });

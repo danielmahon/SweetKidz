@@ -1,6 +1,6 @@
 {
   "name": "SweetKidzServer",
-  "version": "0.0.1-1",
+  "version": "0.0.1-3",
   "private": false,
   "dependencies": {
     "underscore": ">0",
@@ -9,7 +9,8 @@
     "websocket": ">0",
     "websocket-server": ">0",
     "sanitizer": ">0",
-    "memcache": ">0"
+    "memcache": ">0",
+    "mailer": ">=0.6.7"
   },
   "subdomain": "sweetkidz-server",
   "scripts": {
