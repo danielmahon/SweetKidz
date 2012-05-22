@@ -7,7 +7,7 @@ var cls = require("./lib/class"),
     Formulas = require("./formulas"),
     check = require("./format").check,
     Types = require("../../shared/js/gametypes"),
-    email = require('./node_mailer');
+    email = require('mailer');
 
 module.exports = Player = Character.extend({
     init: function(connection, connectionServer) {
