@@ -2258,6 +2258,29 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
             }
         },
     
+        assignGlobalBubble: function(id) {
+            var bubble = this.bubbleManager.getBubbleById(id);
+
+            if(bubble) {
+                if(this.chats >= this.maxChats) {
+                    this.chats = 0;
+                }
+                var s = this.renderer.scale,
+                    ts = 16,
+                    t = ts * s,
+                    startX = t * 27,
+                    startY = t * 10,
+                    x = (this.camera.gridW - 2) * t - startX,
+                    y = (this.camera.gridH - 2) * t - startY;
+                y = y + (this.chats++ * t * 2);
+
+                // bubble.element.css('left', x + 'px');                // bubble.element.css('top', y + 'px');
+                bubble.element.css('left', '0px');
+                bubble.element.css('top', '0px');
+                bubble.element.css('color', this.globalChatColor);
+            }
+        },
+
         restart: function() {
             log.debug("Beginning restart");
         
