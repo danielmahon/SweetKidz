@@ -12,6 +12,7 @@ define(['jquery', 'storage'], function($, Storage) {
             this.watchNameInputInterval = setInterval(this.toggleButton.bind(this), 100);
             this.$playButton = $('.play'),
             this.$playDiv = $('.play div');
+            this.isLocal = false;
         },
         
         setGame: function(game) {
@@ -90,14 +91,16 @@ define(['jquery', 'storage'], function($, Storage) {
                     config = this.config;
 
                 //>>includeStart("devHost", pragmas.devHost);
-                if(config.local) {
-                    log.debug("Starting game with local dev config.");
-                    this.game.setServerOptions(config.local.host, config.local.port, username);
-                } else {
-                    log.debug("Starting game with default dev config.");
-                    this.game.setServerOptions(config.dev.host, config.dev.port, username);
+                if(this.isLocal) {
+	                if(config.local) {
+	                    log.debug("Starting game with local dev config.");
+	                    this.game.setServerOptions(config.local.host, config.local.port, username);
+	                } else {
+	                    log.debug("Starting game with default dev config.");
+	                    this.game.setServerOptions(config.dev.host, config.dev.port, username);
+	                }
+	               	optionsSet = true;
                 }
-                optionsSet = true;
                 //>>includeEnd("devHost");
                 
                 //>>includeStart("prodHost", pragmas.prodHost);
@@ -186,6 +189,7 @@ define(['jquery', 'storage'], function($, Storage) {
         showChat: function() {
             if(this.game.started) {
                 $('#chatbox').addClass('active');
+                $('#chatbox .legend').fadeIn('fast');
                 $('#chatinput').focus();
                 $('#chatbutton').addClass('active');
             }
@@ -194,6 +198,7 @@ define(['jquery', 'storage'], function($, Storage) {
         hideChat: function() {
             if(this.game.started) {
                 $('#chatbox').removeClass('active');
+                $('#chatbox .legend').fadeOut('fast');
                 $('#chatinput').blur();
                 $('#chatbutton').removeClass('active');
             }

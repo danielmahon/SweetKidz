@@ -26,6 +26,10 @@ module.exports = Player = Character.extend({
         this.disconnectTimeout = null;
         this.pvpEnabled = false;
         this.pvpFlag = false;
+        this.chatCommands = {
+        	WORLDCHAT: '/w',
+        	TELEPORT: '/t'	
+        }
         
         this.connection.listen(function(message) {
             var action = parseInt(message[0]);
@@ -99,7 +103,26 @@ module.exports = Player = Character.extend({
                 // Sanitized messages may become empty. No need to broadcast empty chat messages.
                 if(msg && msg !== "") {
                     msg = msg.substr(0, 60); // Enforce maxlength of chat input
-                    self.broadcastToZone(new Messages.Chat(self, msg), false);
+                    switch(msg.substr(0, 2)) {
+                        case self.chatCommands.WORLDCHAT:
+                            self.server.pushBroadcast(new Messages.Chat(self, msg));
+                            break;
+                        case self.chatCommands.TELEPORT:
+                            var playerName = msg.substr(3).trim();
+                            console.log('Teleport to: '+playerName);
+                            for(var playerId in self.server.players) {
+                                if(self.server.players[playerId].name == playerName) {
+                                    var targetPlayer = self.server.players[playerId];
+                                    if(self.server.isValidPosition(targetPlayer.x, targetPlayer.y)) {
+                                        // self.server.pushToPlayer(self, new Messages.Teleport(self, self.chatCommands.TELEPORT + targetPlayer.x + "," + targetPlayer.y));
+                                        self.server.pushToPlayer(self, new Messages.Teleport(targetPlayer));
+                                    }
+                                }
+                            }
+                            break;
+                        default:
+                            self.broadcastToZone(new Messages.Chat(self, msg), false);
+                    }
                 }
             }
             else if(action === Types.Messages.MOVE) {

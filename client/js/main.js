@@ -6,6 +6,11 @@ define(['jquery', 'app'], function($, App) {
         $(document).ready(function() {
         	app = new App();
             app.center();
+            
+            // if app is starting from localhost, set var for config
+            if (location.hostname === 'localhost' || location.hostname === '192.168.1.83') {
+            	app.isLocal = true;
+            }
         
             if(Detect.isWindows()) {
                 // Workaround for graphical glitches on text
