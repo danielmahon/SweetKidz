@@ -1,5 +1,5 @@
 
-var Types = require("../../shared/js/gametypes");
+var Types = require("gametypes");
 
 var Properties = {
     rat: {
@@ -180,4 +180,6 @@ Properties.getHitPoints = function(kind) {
     return Properties[Types.getKindAsString(kind)].hp;
 };
 
-module.exports = Properties;
+if(!(typeof exports === 'undefined')) {
+    module.exports = Properties;
+}
