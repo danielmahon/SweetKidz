@@ -38,8 +38,29 @@ define(function() {
             this.x = this.gridX * 16;
             this.y = this.gridY * 16;
         },
+        
+        followPlayer: function(entity) {
+            var r = this.renderer,
+                x = Math.round( entity.x - (Math.floor(this.gridW / 2) * r.tilesize) ),
+                y = Math.round( entity.y - (Math.floor(this.gridH / 2) * r.tilesize) );
+                // gX = this.gridX-1,
+                // gY = this.gridY;
+            
+            this.x = x;
+            this.y = y;
+    
+            // this.gridX = Math.floor( entity.gridX / 16 );
+            // this.gridY = Math.floor( entity.gridX / 16 );
+            // this.focusEntity(entity);
+            
+            // if (gX < 15) gX = 0;
+            // if (gY < 7) gY = 0;
+            
+            this.setGridPosition(entity.gridX, entity.gridY);
+        },
 
         lookAt: function(entity) {
+        	console.log('look at '+entity.name);
             var r = this.renderer,
                 x = Math.round( entity.x - (Math.floor(this.gridW / 2) * r.tilesize) ),
                 y = Math.round( entity.y - (Math.floor(this.gridH / 2) * r.tilesize) );
@@ -69,7 +90,7 @@ define(function() {
             }
         },
     
-        focusEntity: function(entity) {
+        focusEntity: function(entity) {
             var w = this.gridW - 2,
                 h = this.gridH - 2,
                 x = Math.floor((entity.gridX - 1) / w) * w,

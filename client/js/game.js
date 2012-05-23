@@ -853,6 +853,20 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                 });
             
                 self.player.onStep(function() {
+                	
+                	self.renderer.camera.followPlayer(self.player);
+                	// self.startZoningFrom(self.player.x, self.player.y);
+/*
+                	console.log('player');
+                	console.log(self.player);
+                	console.log(self.player.x+':'+self.player.y);
+                	console.log(self.player.gridX+':'+self.player.gridY);
+                	console.log('camera');
+                	console.log(self.camera.x+':'+self.camera.y);
+                	console.log(self.camera.gridX+':'+self.camera.gridY);
+                	console.log(self.camera.gridW+':'+self.camera.gridH);
+*/
+                	
                     if(self.player.hasNextStep()) {
                         self.registerEntityDualPosition(self.player);
                     }
