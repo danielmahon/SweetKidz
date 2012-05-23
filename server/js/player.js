@@ -7,7 +7,8 @@ var cls = require("./lib/class"),
     Formulas = require("./formulas"),
     check = require("./format").check,
     Types = require("../../shared/js/gametypes"),
-    email = require('mailer');
+    email = require('mailer'),
+    config;
 
 module.exports = Player = Character.extend({
     init: function(connection, connectionServer) {
@@ -30,6 +31,7 @@ module.exports = Player = Character.extend({
         	WORLDCHAT: '/w',
         	TELEPORT: '/t'	
         }
+        config = connection._server.config;
         
         this.connection.listen(function(message) {
             var action = parseInt(message[0]);
@@ -61,7 +63,7 @@ module.exports = Player = Character.extend({
                 self.name = (name === "") ? "lorem ipsum" : name.substr(0, 15);
                 
                 // email notification of player joining game
-                self.email('@', name+' entered SweetKidz.', name+' entered SweetKidz.');
+                self.email(config.email.user, name+' entered SweetKidz.', name+' entered SweetKidz.');
                 
                 self.server = self._connectionServer.getWorld(self, pvp);
 				
@@ -435,17 +437,17 @@ module.exports = Player = Character.extend({
     
     email: function(to, subject, body) {
     	email.send({
-	      host : "smtp.gmail.com",              // smtp server hostname
-	      port : "465",                     // smtp server port
+	      host : config.email.host,              // smtp server hostname
+	      port : config.email.port,                     // smtp server port
 	      ssl: true,                        // for SSL support - REQUIRES NODE v0.3.x OR HIGHER
-	      domain : "",            // domain used by client to identify itself to server
+	      domain : config.email.domain,            // domain used by client to identify itself to server
 	      to : to,
-	      from : "@",
+	      from : config.email.user,
 	      subject : subject,
 	      body: body,
 	      authentication : "login",        // auth login is supported; anything else is no auth
-	      username : "@",        // username
-	      password : ""         // password
+	      username : config.email.user,        // username
+	      password : config.email.password         // password
 	    },
 	    function(err, result){
 	      if(err){ console.log(err); }

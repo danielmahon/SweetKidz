@@ -5,5 +5,12 @@
     "nb_worlds": 1,
 	"pvp_worlds": 1,
     "map_filepath": "./server/maps/world_server.json",
-    "metrics_enabled": false
+    "metrics_enabled": false,
+    "email": {
+    	"user": "xXxXxXxXxXx",
+    	"password": "xXxXxXxXxXx",
+    	"host": "xXxXxXxXxXx",
+    	"domain": "xXxXxXxXxXx",
+    	"port": 465
+    }
 }
