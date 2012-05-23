@@ -39,6 +39,9 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
             this.attackingMode = false;
             this.followingMode = false;
             this.engagingPC = false;
+            
+            // HUD
+            this.inspecting = null;
     	},
 	
     	clean: function() {
@@ -461,34 +464,44 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
                 }
                 this.unconfirmedTarget = null;
                 this.target = character;
-            } else {
+	        	if (this.settarget_callback) {
+	        		var targetName = Types.getKindAsString(character.kind);
+	        		// var lvl = 
+	        		this.settarget_callback(character, targetName);
+	        	}
+	        } else {
                 log.debug(character.id + " is already the target of " + this.id);
             }
-        	if (this.settarget_callback) {
-        		var targetName = Types.getKindAsString(character.kind);
-        		// var lvl = 
-        		this.settarget_callback(character, targetName);
-        	}
         },
         
         onSetTarget: function(callback) {
         	this.settarget_callback = callback;
         },
-    
+
+        showTarget: function(character) {
+            if(this.inspecting !== character) { // If it's not already set as the target
+        		this.inspecting = character;
+	        	if (this.settarget_callback) {
+	        		var targetName = Types.getKindAsString(character.kind);
+	        		// var lvl = 
+	        		this.settarget_callback(character, targetName, true);
+	        	}
+	        }
+        },
+            
         /**
          * Removes the current attack target.
          */
         removeTarget: function() {
-        	console.log('remove target');
             var self = this;
         
             if(this.target) {
                 if(this.target instanceof Character) {
                     this.target.removeAttacker(this);
                 }
+            	if (this.removetarget_callback) this.removetarget_callback(this.target.id);
                 this.target = null;
             }
-            if (this.removetarget_callback) this.removetarget_callback();
         },
     
         onRemoveTarget: function(callback) {

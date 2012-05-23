@@ -144,38 +144,59 @@ define(['jquery', 'storage'], function($, Storage) {
         },
 
         initTargetHud: function() {
+        	var self = this;
         	console.log('target loaded');
-            var scale = this.game.renderer.getScaleFactor(),
-                healthMaxWidth = $("#target .health").width() - (12 * scale);
+            var scale = self.game.renderer.getScaleFactor(),
+                healthMaxWidth = $("#target .health").width() - (12 * scale),
+                timeout;
             
-        	this.game.player.onSetTarget(function(target, name) {
+        	self.game.player.onSetTarget(function(target, name, mouseover) {
+        		var el = '#target';
+        		if (mouseover) el = '#inspector';
+        		
         		console.log(target);
         		var sprite = target.sprite,
         			x = ((sprite.animationData.idle_down.length-1)*sprite.width),
         			y = ((sprite.animationData.idle_down.row)*sprite.height);
-   				$('#target .name').text(name);
-   				$('#target .headshot div').height(sprite.height).width(sprite.width);
-   				$('#target .headshot div').css('margin-left', -sprite.width/2).css('margin-top', -sprite.height/2);
-   				$('#target .headshot div').css('background', 'url(img/1/'+name+'.png) no-repeat -'+x+'px -'+y+'px');
+   				$(el+' .name').text(name);
+   				$(el+' .headshot div').height(sprite.height).width(sprite.width);
+   				$(el+' .headshot div').css('margin-left', -sprite.width/2).css('margin-top', -sprite.height/2);
+   				$(el+' .headshot div').css('background', 'url(img/1/'+name+'.png) no-repeat -'+x+'px -'+y+'px');
    				
    				if (target.healthPoints) {
-   					$("#target .health").css('width', Math.round(target.healthPoints/target.maxHp*100)+'%');
+   					$(el+" .health").css('width', Math.round(target.healthPoints/target.maxHp*100)+'%');
    				} else {
-   					$("#target .health").css('width', '100%');
+   					$(el+" .health").css('width', '100%');
    				}
    				
-   				$('#target').fadeIn('fast');
+   				$(el).fadeIn('fast');
+   				if (mouseover) {
+	   				clearTimeout(timeout);
+	   				timeout = null;
+   					console.log('popup');
+   					timeout = setTimeout(function() {
+   						console.log('close popup');
+   						$('#inspector').fadeOut('fast');
+   						self.game.player.inspecting = null;
+   					}, 2000);
+   				}
 	        });
         	
-        	this.game.onUpdateTarget(function(target) {
+        	self.game.onUpdateTarget(function(target) {
         		// var hp = target.healthPoints;
         	    // var barWidth = Math.round(target.healthPoint/target.maxHp);
         	    $("#target .health").css('width', Math.round(target.healthPoints/target.maxHp*100) + "%");
+        	    if (self.game.player.inspecting && self.game.player.inspecting.id === target.id) {
+        	    	$("#inspector .health").css('width', Math.round(target.healthPoints/target.maxHp*100) + "%");
+        	    }
         	});
         	
-        	this.game.player.onRemoveTarget(function() {
-        		console.log('remove target');
+        	self.game.player.onRemoveTarget(function(targetId) {
    				$('#target').fadeOut('fast');
+        	    if (self.game.player.inspecting && self.game.player.inspecting.id === targetId) {
+   					$('#inspector').fadeOut('fast');
+   					self.game.player.inspecting = null;
+   				}
         	});
         	
         },

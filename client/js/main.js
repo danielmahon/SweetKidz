@@ -11,6 +11,11 @@ define(['jquery', 'app'], function($, App) {
             if (location.hostname === 'localhost' || location.hostname === '192.168.1.83') {
             	app.isLocal = true;
             }
+            
+            // disable contextual menu inside container
+            $('#container').bind("contextmenu", function(e) {
+                e.preventDefault();
+            });
         
             if(Detect.isWindows()) {
                 // Workaround for graphical glitches on text
