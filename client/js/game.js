@@ -1,10 +1,10 @@
 
 define(['infomanager', 'bubble', 'renderer', 'map', 'animation', 'sprite', 'tile',
         'warrior', 'gameclient', 'audio', 'updater', 'transition', 'pathfinder',
-        'item', 'mob', 'npc', 'player', 'character', 'chest', 'mobs', 'exceptions', 'config', 'chathandler', 'properties', '../../shared/js/gametypes'],
+        'item', 'mob', 'npc', 'player', 'character', 'chest', 'mobs', 'exceptions', 'config', 'chathandler', '../../shared/js/gametypes'],
 function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedTile,
          Warrior, GameClient, AudioManager, Updater, Transition, Pathfinder,
-         Item, Mob, Npc, Player, Character, Chest, Mobs, Exceptions, config, ChatHandler, Properties) {
+         Item, Mob, Npc, Player, Character, Chest, Mobs, Exceptions, config, ChatHandler) {
     
     var Game = Class.extend({
         init: function(app) {
@@ -1914,11 +1914,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
         
                 if(this.hoveringMob || this.hoveringNpc || this.hoveringChest || this.hoveringPlayer) {
                     var entity = this.getEntityAt(x, y);
-                    
-            		// console.log(Properties.getArmorLevel(entity.kind));
-            		// console.log(Properties.getWeaponLevel(entity.kind));
-            		// console.log(Properties.getHitPoints(entity.kind));
-            		
+                                		
             		this.player.showTarget(entity);
             		
                     if(!entity.isHighlighted && this.renderer.supportsSilhouettes) {
