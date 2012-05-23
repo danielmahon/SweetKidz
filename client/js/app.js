@@ -189,6 +189,7 @@ define(['jquery', 'storage'], function($, Storage) {
         showChat: function() {
             if(this.game.started) {
                 $('#chatbox').addClass('active');
+                $('#chatbox .legend').fadeIn('fast');
                 $('#chatinput').focus();
                 $('#chatbutton').addClass('active');
             }
@@ -197,6 +198,7 @@ define(['jquery', 'storage'], function($, Storage) {
         hideChat: function() {
             if(this.game.started) {
                 $('#chatbox').removeClass('active');
+                $('#chatbox .legend').fadeOut('fast');
                 $('#chatinput').blur();
                 $('#chatbutton').removeClass('active');
             }
