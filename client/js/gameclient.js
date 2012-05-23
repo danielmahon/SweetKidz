@@ -327,7 +327,7 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
             var worldPlayers = data[1],
                 totalPlayers = data[2];
         
-            if(this.population_callback) {
+            if(this.population_callback) {
                 this.population_callback(worldPlayers, totalPlayers);
             }
         },

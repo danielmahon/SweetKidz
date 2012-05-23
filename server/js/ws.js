@@ -44,7 +44,7 @@ var Server = cls.Class.extend({
         this._connections[connection.id] = connection;
     },
     
-    removeConnection: function(id) {
+    removeConnection: function(id) {
         delete this._connections[id];
     },
     
@@ -122,7 +122,7 @@ WS.MultiVersionWebsocketServer = Server.extend({
                
         this._httpServer = http.createServer(function(request, response) {
             var path = url.parse(request.url).pathname;
-            switch(path) {
+            switch(path) {
                 case '/status':
                     if(self.status_callback) {
                         response.writeHead(200);
