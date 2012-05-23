@@ -464,12 +464,22 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
             } else {
                 log.debug(character.id + " is already the target of " + this.id);
             }
+        	if (this.settarget_callback) {
+        		var targetName = Types.getKindAsString(character.kind);
+        		// var lvl = 
+        		this.settarget_callback(character, targetName);
+        	}
+        },
+        
+        onSetTarget: function(callback) {
+        	this.settarget_callback = callback;
         },
     
         /**
          * Removes the current attack target.
          */
         removeTarget: function() {
+        	console.log('remove target');
             var self = this;
         
             if(this.target) {
@@ -478,8 +488,13 @@ define(['entity', 'transition', 'timer'], function(Entity, Transition, Timer) {
                 }
                 this.target = null;
             }
+            if (this.removetarget_callback) this.removetarget_callback();
         },
     
+        onRemoveTarget: function(callback) {
+        	this.removetarget_callback = callback;
+        },
+
         /**
          * Returns true if this character has a current attack target.
          * @returns {Boolean} Whether this character has a target.

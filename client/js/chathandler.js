@@ -51,7 +51,6 @@ define(['jquery'], function($) {
                             messageId = Math.floor(Math.random() * 10000);
                             // self.game.createBubble(messageId, message);
                             // self.game.assignGlobalBubble(messageId);
-                            console.log(message);
                             // self.game.assignBubbleTo(messageId);
                             self.addToChatLog(message);
                             return true;
@@ -79,7 +78,6 @@ define(['jquery'], function($) {
                 };
             if (pattern in commandPatterns[type]) {
                 if (typeof commandPatterns[type][pattern] == "function") {
-                	console.log(type);
                     switch(type) {
                         case 'senders':
                             return commandPatterns[type][pattern](message.substring(3));

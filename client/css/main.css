@@ -167,6 +167,7 @@ footer, header, hgroup, menu, nav, section {
     
     .barbutton {background:url('../img/1/barsheet.png');image-rendering:-moz-crispt-edges;position:absolute;}
     
+    /* Chat Box */
     #chatbox {background:url('../img/1/barsheet.png');image-rendering:-moz-crisp-edges;position:absolute;left:50%;z-index:5;-moz-transition:0.2s bottom ease;-webkit-transition:0.2s bottom ease;-o-transition:0.2s bottom ease;-ms-transition:0.2s bottom ease;transition:0.2s bottom ease;}
     #chatbox .legend {
     	position: absolute;
@@ -182,6 +183,55 @@ footer, header, hgroup, menu, nav, section {
     #chatbox .legend p {
     	line-height: 1;
     }
+    
+    div.clear {
+    	float: left;
+    	clear: both;
+    	width: 100%;
+    }
+    
+    /* Target */
+   	#target {
+   		font-family:'GraphicPixel';
+   		color:#e3e3e3;
+    	position: absolute;
+    	top: 10px;
+    	left: 10px;
+    	padding: 4px;
+    	background: rgba(45,45,45,0.8);
+    	display: none;
+   	}
+   	#target .headshot {
+   		float: left;
+   		height: 32px;
+   		width: 32px;
+   		border: 2px solid #000;
+   		margin-right: 3px;
+    	background: #FFF;
+    	overflow: hidden;
+   	}
+   	#target .headshot div {
+   		position: relative;
+   		top: 50%;
+   		left: 50%
+   	}
+   	#target .details {
+   		float: left;
+   		width: 100px;
+   	}
+   	#target .name {
+   		float: left;
+   		margin-bottom: 8px;
+   		text-transform: capitalize;
+   	}
+   	#target .health {
+   		float: left;
+   		height: 10px;
+   		width: 100%;
+   		background: red;
+   		clear: left;
+   	}
+   
     .bubble p {-moz-user-select:none;-webkit-user-select:none;}
     
     #instructions {position:absolute;top:50%;left:50%;z-index:1000;font-family:'GraphicPixel';pointer-events:none;opacity:0;-moz-transition:0.25s opacity linear;-webkit-transition:0.4s top ease, 0.4s opacity linear;-o-transition:0.4s top ease, 0.4s opacity linear;-ms-transition:0.4s top ease, 0.4s opacity linear;transition:0.4s top ease, 0.4s opacity linear;}

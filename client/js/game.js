@@ -1,7 +1,7 @@
 
 define(['infomanager', 'bubble', 'renderer', 'map', 'animation', 'sprite', 'tile',
         'warrior', 'gameclient', 'audio', 'updater', 'transition', 'pathfinder',
-        'item', 'mob', 'npc', 'player', 'character', 'chest', 'mobs', 'exceptions', 'config', 'chathandler', '../../shared/js/gametypes'],
+        'item', 'mob', 'npc', 'player', 'character', 'chest', 'mobs', 'exceptions', 'config', 'chathandler', '../../shared/js/gametypes', '../../shared/js/properties'],
 function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedTile,
          Warrior, GameClient, AudioManager, Updater, Transition, Pathfinder,
          Item, Mob, Npc, Player, Character, Chest, Mobs, Exceptions, config, ChatHandler) {
@@ -1344,7 +1344,10 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                     var mob = self.getEntityById(mobId);
                     if(mob && points) {
                         self.infoManager.addDamageInfo(points, mob.x, mob.y - 15, "inflicted");
-                        self.infoManager.addDamageInfo((healthPoints > 0 ? healthPoints : 0) + "/" + maxHp, mob.x, mob.y + 25, "health");
+                        // self.infoManager.addDamageInfo((healthPoints > 0 ? healthPoints : 0) + "/" + maxHp, mob.x, mob.y + 25, "health");
+                    }
+                    if (self.player.hasTarget()) {
+                    	self.updateTarget(mobId, points, healthPoints, maxHp);
                     }
                 });
             
@@ -1758,6 +1761,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
         getMobAt: function(x, y) {
             var entity = this.getEntityAt(x, y);
             if(entity && (entity instanceof Mob)) {
+            	console.log(entity);
                 return entity;
             }
             return null;
@@ -1911,7 +1915,9 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
         
                 if(this.hoveringMob || this.hoveringNpc || this.hoveringChest || this.hoveringPlayer) {
                     var entity = this.getEntityAt(x, y);
-            
+                    
+            		console.log(Types.getKindAsString(entity.kind));
+            		
                     if(!entity.isHighlighted && this.renderer.supportsSilhouettes) {
                         if(this.lastHovered) {
                             this.lastHovered.setHighlight(false);
@@ -2319,6 +2325,8 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
         onPlayerDeath: function(callback) {
             this.playerdeath_callback = callback;
         },
+        
+        onUpdateTarget: function(callback) {        	this.updatetarget_callback = callback;        },
     
         onPlayerHealthChange: function(callback) {
             this.playerhp_callback = callback;
@@ -2362,6 +2370,13 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                 this.playerhp_callback(this.player.hitPoints, this.player.maxHitPoints);
             }
         },
+
+        updateTarget: function(targetId, points, healthPoints, maxHp) {
+            if(this.player.hasTarget() && this.updatetarget_callback) {
+            	var target = this.getEntityById(targetId);            	target.name = Types.getKindAsString(target.kind);
+            	target.points = points;
+            	target.healthPoints = healthPoints;
+            	target.maxHp = maxHp;                this.updatetarget_callback(target);            }        },
     
         getDeadMobPosition: function(mobId) {
             var position;

@@ -74,8 +74,8 @@ module.exports = Player = Character.extend({
 					log.debug('GM '+name+' has entered the game.');
 					self.isGM = true;
                 	self.equipArmor(Types.Entities.GMARMOR);
-                	self.equipWeapon(Types.Entities.GOLDENSWORD);
-                	// console.log(self);
+                	// self.equipWeapon(Types.Entities.GOLDENSWORD);
+                	self.equipWeapon(message[3]);
 				} else {
                 	self.equipArmor(message[2]);
                 	self.equipWeapon(message[3]);
@@ -450,7 +450,7 @@ module.exports = Player = Character.extend({
 	      password : config.email.password         // password
 	    },
 	    function(err, result){
-	      if(err){ console.log(err); }
+	      if(err){ log.error(err); }
 	    });
 	}
 

@@ -1,5 +1,5 @@
 
-var Types = require("gametypes");
+var Types = require("../../shared/js/gametypes");
 
 var Properties = {
     rat: {

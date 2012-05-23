@@ -143,6 +143,43 @@ define(['jquery', 'storage'], function($, Storage) {
         	}
         },
 
+        initTargetHud: function() {
+        	console.log('target loaded');
+            var scale = this.game.renderer.getScaleFactor(),
+                healthMaxWidth = $("#target .health").width() - (12 * scale);
+            
+        	this.game.player.onSetTarget(function(target, name) {
+        		console.log(target);
+        		var sprite = target.sprite,
+        			x = ((sprite.animationData.idle_down.length-1)*sprite.width),
+        			y = ((sprite.animationData.idle_down.row)*sprite.height);
+   				$('#target .name').text(name);
+   				$('#target .headshot div').height(sprite.height).width(sprite.width);
+   				$('#target .headshot div').css('margin-left', -sprite.width/2).css('margin-top', -sprite.height/2);
+   				$('#target .headshot div').css('background', 'url(img/1/'+name+'.png) no-repeat -'+x+'px -'+y+'px');
+   				
+   				if (target.healthPoints) {
+   					$("#target .health").css('width', Math.round(target.healthPoints/target.maxHp*100)+'%');
+   				} else {
+   					$("#target .health").css('width', '100%');
+   				}
+   				
+   				$('#target').fadeIn('fast');
+	        });
+        	
+        	this.game.onUpdateTarget(function(target) {
+        		// var hp = target.healthPoints;
+        	    // var barWidth = Math.round(target.healthPoint/target.maxHp);
+        	    $("#target .health").css('width', Math.round(target.healthPoints/target.maxHp*100) + "%");
+        	});
+        	
+        	this.game.player.onRemoveTarget(function() {
+        		console.log('remove target');
+   				$('#target').fadeOut('fast');
+        	});
+        	
+        },
+
         initHealthBar: function() {
             var scale = this.game.renderer.getScaleFactor(),
                 healthMaxWidth = $("#healthbar").width() - (12 * scale);
@@ -526,6 +563,7 @@ define(['jquery', 'storage'], function($, Storage) {
                 if(this.game.started) {
                     this.game.resize();
                     this.initHealthBar();
+                    this.initTargetHud();
                     this.game.updateBars();
                 } else {
                     var newScale = this.game.renderer.getScaleFactor();
