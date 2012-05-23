@@ -316,10 +316,12 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
     
         receiveDamage: function(data) {
             var id = data[1],
-                dmg = data[2];
+                dmg = data[2],
+                hp = parseInt(data[3]),
+                maxHp = parseInt(data[4]);
         
             if(this.dmg_callback) {
-                this.dmg_callback(id, dmg);
+                this.dmg_callback(id, dmg, hp, maxHp);
             }
         },
     

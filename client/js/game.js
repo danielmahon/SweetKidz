@@ -869,7 +869,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                         }
                     });
                 
-                    if((self.player.gridX <= 85 && self.player.gridY <= 179 && self.player.gridY > 178) || (self.player.gridX <= 85 && self.player.gridY <= 266 && self.player.gridY > 265)) {
+                    if((self.player.gridX <= 85 && self.player.gridY <= 179 && self.player.gridY > 178) || (self.player.gridX <= 85 && self.player.gridY <= 266 && self.player.gridY > 265)) {
                         self.tryUnlockingAchievement("INTO_THE_WILD");
                     }
                     
@@ -1105,7 +1105,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
             
                 self.client.onSpawnCharacter(function(entity, x, y, orientation, targetId) {
                     if(!self.entityIdExists(entity.id)) {
-                        try {
+                        try {
                             if(entity.id !== self.playerId) {
                                 entity.setSprite(self.sprites[entity.getSpriteName()]);
                                 entity.setGridPosition(x, y);
@@ -1340,10 +1340,11 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                     }
                 });
             
-                self.client.onPlayerDamageMob(function(mobId, points) {
+                self.client.onPlayerDamageMob(function(mobId, points, healthPoints, maxHp) {
                     var mob = self.getEntityById(mobId);
                     if(mob && points) {
                         self.infoManager.addDamageInfo(points, mob.x, mob.y - 15, "inflicted");
+                        self.infoManager.addDamageInfo((healthPoints > 0 ? healthPoints : 0) + "/" + maxHp, mob.x, mob.y + 25, "health");
                     }
                 });
             

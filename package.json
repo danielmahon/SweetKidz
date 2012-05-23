@@ -1,6 +1,6 @@
 {
   "name": "SweetKidzServer",
-  "version": "0.0.2",
+  "version": "0.0.2-2",
   "private": false,
   "dependencies": {
     "underscore": ">0",

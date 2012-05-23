@@ -55,6 +55,10 @@ define(function() {
         "healed": {
             fill: "rgb(80, 255, 80)",
             stroke: "rgb(50, 120, 50)"
+        },
+        "health": {
+            fill: "white",
+            stroke: "#373737"
         }
     };
 
@@ -73,6 +77,7 @@ define(function() {
             this.speed = 100;
             this.fillColor = damageInfoColors[type].fill;
             this.strokeColor = damageInfoColors[type].stroke;
+            this.type = type;
         },
     
         isTimeToAnimate: function(time) {
@@ -87,14 +92,14 @@ define(function() {
         },
     
         tick: function() {
-            this.y -= 1;
+            if (this.type !== 'health') this.y -= 1;
             this.opacity -= 0.07;
             if(this.opacity < 0) {
                 this.destroy();
             }
         },
     
-        onDestroy: function(callback) {
+        onDestroy: function(callback) {
             this.destroy_callback = callback;
         },
     
