@@ -7,9 +7,9 @@
     "map_filepath": "./server/maps/world_server.json",
     "metrics_enabled": false,
     "email": {
-    	"user": "xXxXxXxXxXx",
-    	"password": "xXxXxXxXxXx",
-    	"host": "xXxXxXxXxXx",
+    	"user": "",
+    	"password": "",
+    	"host": "",
     	"domain": "xXxXxXxXxXx",
     	"port": 465
     }
