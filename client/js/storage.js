@@ -17,7 +17,8 @@ define(function() {
                     name: "",
                     weapon: "",
                     armor: "",
-                    image: ""
+                    image: "",
+                    lastLocation: {}
                 },
                 achievements: {
                     unlocked: [],
@@ -78,10 +79,16 @@ define(function() {
             this.save();
         },
 
-        savePlayer: function(img, armor, weapon) {
+        setPlayerLocation: function(location) {
+            this.data.player.lastLocation = location;
+            this.save();
+        },
+
+        savePlayer: function(img, armor, weapon, location) {
             this.setPlayerImage(img);
             this.setPlayerArmor(armor);
             this.setPlayerWeapon(weapon);
+            this.setPlayerLocation(location)
         },
     
         // Achievements

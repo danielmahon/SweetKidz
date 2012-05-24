@@ -55,7 +55,9 @@ module.exports = World = cls.Class.extend({
         this.onPlayerConnect(function(player) {
             player.onRequestPosition(function() {
                 player.pvpEnabled = self.pvpEnabled;
-                if(player.lastCheckpoint) {
+                if(player.lastLocation) {
+                	return player.lastLocation;
+                } else if (player.lastCheckpoint) {
                     return player.lastCheckpoint.getRandomPosition();
                 } else {
                     return self.map.getRandomStartingPosition();

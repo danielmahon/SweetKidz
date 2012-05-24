@@ -22,6 +22,9 @@ define(['character', 'exceptions'], function(Character, Exceptions) {
 
             //PVP Flag
             this.pvpFlag = false;
+            
+            // Last Location
+            this.lastLocation = null;
         },
     
         loot: function(item) {

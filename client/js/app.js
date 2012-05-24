@@ -154,7 +154,6 @@ define(['jquery', 'storage'], function($, Storage) {
         		var el = '#target';
         		if (mouseover) el = '#inspector';
         		
-        		console.log(target);
         		var sprite = target.sprite,
         			x = ((sprite.animationData.idle_down.length-1)*sprite.width),
         			y = ((sprite.animationData.idle_down.row)*sprite.height);
@@ -173,9 +172,7 @@ define(['jquery', 'storage'], function($, Storage) {
    				if (mouseover) {
 	   				clearTimeout(timeout);
 	   				timeout = null;
-   					console.log('popup');
    					timeout = setTimeout(function() {
-   						console.log('close popup');
    						$('#inspector').fadeOut('fast');
    						self.game.player.inspecting = null;
    					}, 2000);
@@ -183,8 +180,6 @@ define(['jquery', 'storage'], function($, Storage) {
 	        });
         	
         	self.game.onUpdateTarget(function(target) {
-        		// var hp = target.healthPoints;
-        	    // var barWidth = Math.round(target.healthPoint/target.maxHp);
         	    $("#target .health").css('width', Math.round(target.healthPoints/target.maxHp*100) + "%");
         	    if (self.game.player.inspecting && self.game.player.inspecting.id === target.id) {
         	    	$("#inspector .health").css('width', Math.round(target.healthPoints/target.maxHp*100) + "%");

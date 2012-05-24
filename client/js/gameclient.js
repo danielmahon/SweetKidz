@@ -478,11 +478,13 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
         },
 
         sendHello: function(player, realmType) {
+        	console.log(player.lastLocation);
             this.sendMessage([Types.Messages.HELLO,
                               player.name,
                               Types.getKindFromString(player.getSpriteName()),
                               Types.getKindFromString(player.getWeaponName()),
-                              realmType]);
+                              realmType,
+                              JSON.stringify(player.lastLocation)]);
         },
 
         sendMove: function(x, y) {

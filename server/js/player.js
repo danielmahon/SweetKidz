@@ -23,6 +23,7 @@ module.exports = Player = Character.extend({
         this.isDead = false;
         this.haters = {};
         this.lastCheckpoint = null;
+        this.lastLocation = -1;
         this.formatChecker = new FormatChecker();
         this.disconnectTimeout = null;
         this.pvpEnabled = false;
@@ -74,8 +75,8 @@ module.exports = Player = Character.extend({
 					log.debug('GM '+name+' has entered the game.');
 					self.isGM = true;
                 	self.equipArmor(Types.Entities.GMARMOR);
-                	// self.equipWeapon(Types.Entities.GOLDENSWORD);
-                	self.equipWeapon(message[3]);
+                	self.equipWeapon(Types.Entities.GOLDENSWORD);
+                	// self.equipWeapon(message[3]);
 				} else {
                 	self.equipArmor(message[2]);
                 	self.equipWeapon(message[3]);
@@ -83,6 +84,7 @@ module.exports = Player = Character.extend({
                 
                 self.orientation = Utils.randomOrientation();
                 self.updateHitPoints();
+                self.lastLocation = JSON.parse(message[5]);
                 self.updatePosition();
 
                 self.server.addPlayer(self);
