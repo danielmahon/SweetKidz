@@ -9,6 +9,10 @@ var cls = require("./lib/class"),
     Types = require("../../shared/js/gametypes"),
     email = require('mailer'),
     config;
+ 
+// Setup MongoDB  
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/sweetkidz');
 
 module.exports = Player = Character.extend({
     init: function(connection, connectionServer) {
@@ -22,6 +26,7 @@ module.exports = Player = Character.extend({
         this.hasEnteredGame = false;
         this.isDead = false;
         this.haters = {};
+        this.inventory = {};
         this.lastCheckpoint = null;
         this.lastLocation = -1;
         this.formatChecker = new FormatChecker();
@@ -84,15 +89,12 @@ module.exports = Player = Character.extend({
                 
                 self.orientation = Utils.randomOrientation();
                 self.updateHitPoints();
-                self.lastLocation = JSON.parse(message[5]);
-                self.updatePosition();
 
-                self.server.addPlayer(self);
-                self.server.enter_callback(self);
+                // self.lastLocation = JSON.parse(message[5]);                // self.updatePosition();
+                // self.server.addPlayer(self);                // self.server.enter_callback(self);
+                
+                self.loadPlayer();
 
-                self.send([Types.Messages.WELCOME, self.id, self.name, self.x, self.y, self.hitPoints]);
-                self.hasEnteredGame = true;
-                self.isDead = false;
             }
             else if(action === Types.Messages.WHO) {
                 message.shift();
@@ -201,39 +203,55 @@ module.exports = Player = Character.extend({
                 if(item) {
                     var kind = item.kind;
                     
-                    if(Types.isItem(kind)) {
-                        self.broadcast(item.despawn());
-                        self.server.removeEntity(item);
-                        
-                        if(kind === Types.Entities.FIREPOTION) {
-                            self.updateHitPoints();
-                            self.broadcast(self.equip(Types.Entities.FIREFOX));
-                            self.firepotionTimeout = setTimeout(function() {
-                                self.broadcast(self.equip(self.armor)); // return to normal after 15 sec
-                                self.firepotionTimeout = null;
-                            }, 15000);
-                            self.send(new Messages.HitPoints(self.maxHitPoints).serialize());
-                        } else if(Types.isHealingItem(kind)) {
-                            var amount;
-                            
-                            switch(kind) {
-                                case Types.Entities.FLASK: 
-                                    amount = 40;
-                                    break;
-                                case Types.Entities.BURGER: 
-                                    amount = 100;
-                                    break;
+                    var inventory_full = 0;
+                    for(i=0; i<8; ++i){
+                        if(typeof self.inventory[i] === "undefined"){
+                            if(inventory_full == 0){
+                                self.inventory[i] = item.kind;
+                                self.broadcast(item.despawn());
+                                self.server.removeEntity(item);
                             }
+                            inventory_full = 1;
                             
-                            if(!self.hasFullHealth()) {
-                                self.regenHealthBy(amount);
-                                self.server.pushToPlayer(self, self.health());
-                            }
-                        } else if(Types.isArmor(kind) || Types.isWeapon(kind)) {
-                            self.equipItem(item);
-                            self.broadcast(self.equip(kind));
                         }
                     }
+                    
+                    
+                    
+                    
+                    // if(Types.isItem(kind)) {
+                    //     self.broadcast(item.despawn());
+                    //     self.server.removeEntity(item);
+                    //     
+                    //     if(kind === Types.Entities.FIREPOTION) {
+                    //         self.updateHitPoints();
+                    //         self.broadcast(self.equip(Types.Entities.FIREFOX));
+                    //         self.firepotionTimeout = setTimeout(function() {
+                    //             self.broadcast(self.equip(self.armor)); // return to normal after 15 sec
+                    //             self.firepotionTimeout = null;
+                    //         }, 15000);
+                    //         self.send(new Messages.HitPoints(self.maxHitPoints).serialize());
+                    //     } else if(Types.isHealingItem(kind)) {
+                    //         var amount;
+                    //         
+                    //         switch(kind) {
+                    //             case Types.Entities.FLASK: 
+                    //                 amount = 40;
+                    //                 break;
+                    //             case Types.Entities.BURGER: 
+                    //                 amount = 100;
+                    //                 break;
+                    //         }
+                    //         
+                    //         if(!self.hasFullHealth()) {
+                    //             self.regenHealthBy(amount);
+                    //             self.server.pushToPlayer(self, self.health());
+                    //         }
+                    //     } else if(Types.isArmor(kind) || Types.isWeapon(kind)) {
+                    //         self.equipItem(item);
+                    //         self.broadcast(self.equip(kind));
+                    //     }
+                    // }
                 }
             }
             else if(action === Types.Messages.TELEPORT) {
@@ -416,16 +434,28 @@ module.exports = Player = Character.extend({
         this.resetHitPoints(Formulas.hp(this.armorLevel));
     },
     
-    updatePosition: function() {
-        if(this.requestpos_callback) {
-            var pos = this.requestpos_callback();
-            this.setPosition(pos.x, pos.y);
-        }
+    loadPlayer: function() {
+        var me = this;
+        
+            db.get("player_" + this.name, function (err,doc) {
+                  log.debug("Loaded player " + doc + "err" + err);
+                  if(err == null){
+                      me.setPosition(doc.x,doc.y);
+                      me.server.addPlayer(me);
+                      me.server.enter_callback(me);
+                      if(doc.inventory != null){
+                          me.inventory = eval('(' + doc.inventory + ')'); 
+                      }
+                      me.send([Types.Messages.WELCOME, me.id, me.name, doc.x, doc.y, me.hitPoints,doc.armor,doc.weapon,doc.inventory]);
+                      me.hasEnteredGame = true;
+                      me.isDead = false;
+
+                  }
+            });        
+        
+
     },
-    
-    onRequestPosition: function(callback) {
-        this.requestpos_callback = callback;
-    },
+
     
     resetTimeout: function() {
         clearTimeout(this.disconnectTimeout);
@@ -454,6 +484,18 @@ module.exports = Player = Character.extend({
 	    function(err, result){
 	      if(err){ log.error(err); }
 	    });
-	}
+	},
 
+    getJSON: function(){
+        return {
+            "name" : this.name,
+            "type" : "player",
+             "x" : this.x,
+             "y" : this.y,
+             "weapon" : this.weapon,
+             "armor"  : this.armor,
+             "inventory" : JSON.stringify(this.inventory)
+        };
+        
+    },
 });

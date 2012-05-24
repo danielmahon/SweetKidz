@@ -17,6 +17,10 @@ var cls = require("./lib/class"),
     Utils = require("./utils"),
     Types = require("../../shared/js/gametypes");
 
+// Setup MongoDB  
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/sweetkidz');
+
 // ======= GAME SERVER ========
 
 module.exports = World = cls.Class.extend({
@@ -51,8 +55,9 @@ module.exports = World = cls.Class.extend({
         this.playerCount = 0;
         
         this.zoneGroupsReady = false;
-        
+
         this.onPlayerConnect(function(player) {
+<<<<<<< HEAD
             player.onRequestPosition(function() {
                 player.pvpEnabled = self.pvpEnabled;
                 if(player.lastLocation) {
@@ -64,10 +69,15 @@ module.exports = World = cls.Class.extend({
                 }
             });
         });
+=======
+>>>>>>> 9162327201a0f0ba24ff2220fc2b764997025331
         
+
+         });
+
         this.onPlayerEnter(function(player) {
             log.info(player.name + " has joined "+ self.id);
-            
+   
             if(!player.hasEnteredGame) {
                 self.incrementPlayerCount();
             }
@@ -116,6 +126,14 @@ module.exports = World = cls.Class.extend({
             });
     
             player.onExit(function() {
+
+                // Player has exited save info to DB
+                db.save("player_" + player.name, 
+                     player.getJSON()
+                 , function (err, res) {
+                     log.debug("saved to database" + err + res);
+                 });               
+                  
                 log.info(player.name + " has left the game.");
                 self.removePlayer(player);
                 self.decrementPlayerCount();

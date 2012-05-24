@@ -15,6 +15,8 @@ define(['character', 'exceptions'], function(Character, Exceptions) {
             // sprites
             this.spriteName = "clotharmor";
             this.weaponName = "sword1";
+            
+            this.inventory = {};
         
             // modes
             this.isLootMoving = false;
@@ -29,40 +31,52 @@ define(['character', 'exceptions'], function(Character, Exceptions) {
     
         loot: function(item) {
             if(item) {
+
                 var rank, currentRank, msg, currentArmorName;
             
-                if(this.currentArmorSprite) {
-                    currentArmorName = this.currentArmorSprite.name;
-                } else {
-                    currentArmorName = this.spriteName;
-                }
-
-                if(item.type === "armor") {
-                    rank = Types.getArmorRank(item.kind);
-                    currentRank = Types.getArmorRank(Types.getKindFromString(currentArmorName));
-                    msg = "You are wearing a better armor";
-                } else if(item.type === "weapon") {
-                    rank = Types.getWeaponRank(item.kind);
-                    currentRank = Types.getWeaponRank(Types.getKindFromString(this.weaponName));
-                    msg = "You are wielding a better weapon";
-                }
-
-                if(rank && currentRank) {
-                    if(rank === currentRank) {
-                        throw new Exceptions.LootException("You already have this "+item.type);
-                    } else if(rank <= currentRank) {
-                        throw new Exceptions.LootException(msg);
-                    }
-                }
+                // if(this.currentArmorSprite) {
+                //     currentArmorName = this.currentArmorSprite.name;
+                // } else {
+                //     currentArmorName = this.spriteName;
+                // }
+                // 
+                // if(item.type === "armor") {
+                //     rank = Types.getArmorRank(item.kind);
+                //     currentRank = Types.getArmorRank(Types.getKindFromString(currentArmorName));
+                //     msg = "You are wearing a better armor";
+                // } else if(item.type === "weapon") {
+                //     rank = Types.getWeaponRank(item.kind);
+                //     currentRank = Types.getWeaponRank(Types.getKindFromString(this.weaponName));
+                //     msg = "You are wielding a better weapon";
+                // }
+                // 
+                // if(rank && currentRank) {
+                //     if(rank === currentRank) {
+                //         throw new Exceptions.LootException("You already have this "+item.type);
+                //     } else if(rank <= currentRank) {
+                //         throw new Exceptions.LootException(msg);
+                //     }
+                // }
             
                 log.info('Player '+this.id+' has looted '+item.id);
-                if(Types.isArmor(item.kind) && this.invincible) {
-                    this.stopInvincibility();
-                }
-                item.onLoot(this);
+                // if(Types.isArmor(item.kind) && this.invincible) {
+                //     this.stopInvincibility();
+                // }
+                //item.onLoot(this);
+                this.putItemInInventory(item.kind);
             }
         },
-    
+        
+        putItemInInventory: function(item) {
+            
+            for(i=0; i<8; ++i){
+                if(typeof this.inventory[i] === "undefined"){
+                    this.inventory[i] = item;
+                    return;
+                }
+            }
+        },
+        
         /**
          * Returns true if the character is currently walking towards an item in order to loot it.
          */
