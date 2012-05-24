@@ -14,7 +14,7 @@ Road Map
 * Users accounts, login feature
 * Fullscreen/Window Support
 * Better Key movement (in progress)
-* Camera follow on player
+* Camera follow on player
 * PVP (in progress)
 * Quests
 * Custom Graphics
@@ -44,6 +44,8 @@ BrowserQuest created by [Little Workshop](http://www.littleworkshop.fr):
 
 * Franck Lecollinet - [@whatthefranck](http://twitter.com/whatthefranck)
 * Guillaume Lecollinet - [@glecollinet](http://twitter.com/glecollinet)
+
+Hosting by [Nodejitsu](http://nodejitsu.com)
 
 -----
 Special thanks to other BrowserQuest contributers whose forks did not get referenced properly, I apologize if I used your snippet and did not acknowledge you properly, feel free to contact me with your name and I'll add you to the list.
