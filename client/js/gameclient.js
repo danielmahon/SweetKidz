@@ -171,7 +171,7 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
                 hp = data[5];
                 armor = data[6];
                 weapon = data[7];
-                inventory = eval('(' + data[8] + ')');
+                inventory = data[8];
         
             if(this.welcome_callback) {
                 this.welcome_callback(id, name, x, y, hp, armor, weapon, inventory);
@@ -496,13 +496,11 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
         },
 
         sendHello: function(player, realmType) {
-        	console.log(player.lastLocation);
             this.sendMessage([Types.Messages.HELLO,
                               player.name,
                               Types.getKindFromString(player.getSpriteName()),
                               Types.getKindFromString(player.getWeaponName()),
-                              realmType,
-                              JSON.stringify(player.lastLocation)]);
+                              realmType]);
         },
 
         sendMove: function(x, y) {

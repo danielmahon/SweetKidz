@@ -8,12 +8,9 @@ var cls = require("./lib/class"),
     check = require("./format").check,
     Types = require("../../shared/js/gametypes"),
     email = require('mailer'),
+    db = require('./storage'),
     config;
  
-// Setup MongoDB  
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/sweetkidz');
-
 module.exports = Player = Character.extend({
     init: function(connection, connectionServer) {
         var self = this;
@@ -27,6 +24,7 @@ module.exports = Player = Character.extend({
         this.isDead = false;
         this.haters = {};
         this.inventory = {};
+        this.inventoryIsFull = false;
         this.lastCheckpoint = null;
         this.lastLocation = -1;
         this.formatChecker = new FormatChecker();
@@ -203,19 +201,14 @@ module.exports = Player = Character.extend({
                 if(item) {
                     var kind = item.kind;
                     
-                    var inventory_full = 0;
-                    for(i=0; i<8; ++i){
-                        if(typeof self.inventory[i] === "undefined"){
-                            if(inventory_full == 0){
-                                self.inventory[i] = item.kind;
-                                self.broadcast(item.despawn());
-                                self.server.removeEntity(item);
-                            }
-                            inventory_full = 1;
-                            
-                        }
-                    }
-                    
+                    if (!self.inventoryIsFull) {
+                    	self.inventory.push(item.kind);
+                    	self.broadcast(item.despawn());
+                    	self.server.removeEntity(item);
+                    	if (self.inventory.length >= 8) self.inventoryIsFull = true;
+                    } else {
+                    	
+                    }                    
                     
                     
                     
@@ -433,27 +426,55 @@ module.exports = Player = Character.extend({
     updateHitPoints: function() {
         this.resetHitPoints(Formulas.hp(this.armorLevel));
     },
+
+    updatePosition: function() {
+        if(this.requestpos_callback) {
+            var pos = this.requestpos_callback();
+            this.setPosition(pos.x, pos.y);
+        }
+    },
+    
+    onRequestPosition: function(callback) {
+        this.requestpos_callback = callback;
+    },
     
     loadPlayer: function() {
         var me = this;
         
-            db.get("player_" + this.name, function (err,doc) {
-                  log.debug("Loaded player " + doc + "err" + err);
-                  if(err == null){
-                      me.setPosition(doc.x,doc.y);
-                      me.server.addPlayer(me);
-                      me.server.enter_callback(me);
-                      if(doc.inventory != null){
-                          me.inventory = eval('(' + doc.inventory + ')'); 
-                      }
-                      me.send([Types.Messages.WELCOME, me.id, me.name, doc.x, doc.y, me.hitPoints,doc.armor,doc.weapon,doc.inventory]);
-                      me.hasEnteredGame = true;
-                      me.isDead = false;
-
-                  }
-            });        
+        console.log(me.name);
         
-
+    	function load(doc) {
+    		if (doc.x && doc.y) {
+    			me.setPosition(doc.x, doc.y);
+    		} else {
+				me.updatePosition();
+    		}
+			me.server.addPlayer(me);
+			me.server.enter_callback(me);
+			if(doc.inventory != null){
+			    me.inventory = doc.inventory; 
+			}
+			me.send([Types.Messages.WELCOME, me.id, me.name, me.x, me.y, me.hitPoints,doc.armor,doc.weapon,doc.inventory]);
+			me.hasEnteredGame = true;
+			me.isDead = false;
+    	}
+    	
+        db.model['Player'].findOne({name: me.name}, function (err, doc) {
+        	  if (err) throw err;
+	          if (doc){
+	         	log.debug('Loaded player ' + doc.name + '.');
+	          	load(doc);
+	          } else {
+	          	log.debug('Player not found, creating a new one...');
+	          	var newPlayer = new db.model['Player'];
+	          	newPlayer.name = me.name;
+	          	newPlayer.save(function(err) {
+	          		if (!err) {
+	          			load(newPlayer);
+	          		}
+	          	});
+	          }
+        });
     },
 
     
@@ -486,15 +507,15 @@ module.exports = Player = Character.extend({
 	    });
 	},
 
-    getJSON: function(){
+    getPlayerSaveState: function(){
         return {
-            "name" : this.name,
-            "type" : "player",
-             "x" : this.x,
-             "y" : this.y,
-             "weapon" : this.weapon,
-             "armor"  : this.armor,
-             "inventory" : JSON.stringify(this.inventory)
+            name: this.name,
+            type: "player",
+            x: this.x,
+            y: this.y,
+            weapon: this.weapon,
+            armor: this.armor,
+            inventory: this.inventory
         };
         
     },

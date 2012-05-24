@@ -25,8 +25,6 @@ define(['character', 'exceptions'], function(Character, Exceptions) {
             //PVP Flag
             this.pvpFlag = false;
             
-            // Last Location
-            this.lastLocation = null;
         },
     
         loot: function(item) {
@@ -57,24 +55,19 @@ define(['character', 'exceptions'], function(Character, Exceptions) {
                 //         throw new Exceptions.LootException(msg);
                 //     }
                 // }
-            
+            	console.log(this.inventory);
                 log.info('Player '+this.id+' has looted '+item.id);
                 // if(Types.isArmor(item.kind) && this.invincible) {
                 //     this.stopInvincibility();
                 // }
                 //item.onLoot(this);
                 this.putItemInInventory(item.kind);
+            	console.log(this.inventory);
             }
         },
         
-        putItemInInventory: function(item) {
-            
-            for(i=0; i<8; ++i){
-                if(typeof this.inventory[i] === "undefined"){
-                    this.inventory[i] = item;
-                    return;
-                }
-            }
+        putItemInInventory: function(itemId) {
+            if (this.inventory.length < 8) this.inventory.push(itemId);
         },
         
         /**

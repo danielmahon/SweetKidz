@@ -122,9 +122,6 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
             if(this.storage.hasAlreadyPlayed()) {
                 this.player.setSpriteName(this.storage.data.player.armor);
                 this.player.setWeaponName(this.storage.data.player.weapon);
-                if (this.storage.data.player.lastLocation) {
-                	this.player.lastLocation = this.storage.data.player.lastLocation;
-                }
             }
         
         	this.player.setSprite(this.sprites[this.player.getSpriteName()]);
@@ -609,9 +606,6 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                     this.entityGrid[y][x][entity.id] = entity;
                     if(!(entity instanceof Player)) {
                         this.pathingGrid[y][x] = 1;
-                    } else {
-                    	console.log('save location');
-                    	this.storage.setPlayerLocation({x: x, y: y});
                     }
                 }
                 if(entity instanceof Item) {
@@ -815,8 +809,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                     self.storage.initPlayer(self.player.name);
                     self.storage.savePlayer(self.renderer.getPlayerImage(),
                                             self.player.getSpriteName(),
-                                            self.player.getWeaponName()),
-                                            {x: self.player.gridX, y: self.player.gridY};
+                                            self.player.getWeaponName());
                     self.showNotification("Welcome to SweetKidz!");
                 } else {
                     self.showNotification("Welcome back to SweetKidz!");
@@ -1095,8 +1088,7 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                 self.player.onSwitchItem(function() {
                     self.storage.savePlayer(self.renderer.getPlayerImage(),
                                             self.player.getArmorName(),
-                                            self.player.getWeaponName(),
-                                            {x: self.player.gridX, y: self.player.gridY});
+                                            self.player.getWeaponName());
                     if(self.equipment_callback) {
                         self.equipment_callback();
                     }

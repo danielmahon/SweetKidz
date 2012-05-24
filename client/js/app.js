@@ -453,18 +453,18 @@ define(['jquery', 'storage'], function($, Storage) {
                     armor = this.game.player.getSpriteName(),
                     weaponPath = getIconPath(weapon),
                     armorPath = getIconPath(armor);
-                    
 
                 $('#equipment_weapon').css('background-image', 'url("' + weaponPath + '")');
                 $('#equipment_weapon').data("name",weapon);
                 $('#equipment_armor').css('background-image', 'url("' + armorPath + '")');
                 $('#equipment_armor').data("name",armor);
-                for(i = 1; i < 8; ++i){
-       
-                    item = Types.getNameFromId(this.game.player.inventory[i -1]);
-                    itemPath = getIconPath(item);
-                    $('#inventory_' + i).css('background-image', 'url("' + itemPath + '")');
-                }
+                
+                this.game.player.inventory.forEach(function(itemId, i){
+                	console.log(i);
+                    var item = Types.getNameFromId(itemId);
+                    var itemPath = getIconPath(item);
+                    $('#inventory_' +(i+1)).css('background-image', 'url("' + itemPath + '")');
+                });
 
                 if(!this.game.player) {
                     $('body').toggleClass('death');

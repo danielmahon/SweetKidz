@@ -111,9 +111,7 @@ function main(config) {
 
     server.updateWorlds(worlds);
     
-    process.on('uncaughtException', function (e) {
-        log.error('uncaughtException: ' + e);
-    });
+    // process.on('uncaughtException', function (e) {        // log.error('uncaughtException: ' + e);    // });
 }
 
 function getWorldDistribution(worlds) {

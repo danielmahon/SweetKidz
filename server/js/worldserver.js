@@ -15,11 +15,8 @@ var cls = require("./lib/class"),
     Messages = require('./message'),
     Properties = require("./properties"),
     Utils = require("./utils"),
-    Types = require("../../shared/js/gametypes");
-
-// Setup MongoDB  
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/sweetkidz');
+    Types = require("../../shared/js/gametypes"),
+    db = require('./storage');
 
 // ======= GAME SERVER ========
 
@@ -57,23 +54,15 @@ module.exports = World = cls.Class.extend({
         this.zoneGroupsReady = false;
 
         this.onPlayerConnect(function(player) {
-<<<<<<< HEAD
             player.onRequestPosition(function() {
                 player.pvpEnabled = self.pvpEnabled;
-                if(player.lastLocation) {
-                	return player.lastLocation;
-                } else if (player.lastCheckpoint) {
+                if (player.lastCheckpoint) {
                     return player.lastCheckpoint.getRandomPosition();
                 } else {
                     return self.map.getRandomStartingPosition();
                 }
             });
         });
-=======
->>>>>>> 9162327201a0f0ba24ff2220fc2b764997025331
-        
-
-         });
 
         this.onPlayerEnter(function(player) {
             log.info(player.name + " has joined "+ self.id);
@@ -126,11 +115,9 @@ module.exports = World = cls.Class.extend({
             });
     
             player.onExit(function() {
-
+				var data;
                 // Player has exited save info to DB
-                db.save("player_" + player.name, 
-                     player.getJSON()
-                 , function (err, res) {
+                db.model['Player'].update(player.getPlayerSaveState(), function (err, res) {
                      log.debug("saved to database" + err + res);
                  });               
                   

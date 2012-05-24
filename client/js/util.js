@@ -6,6 +6,10 @@ Function.prototype.bind = function (bind) {
     };
 };
 
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 var isInt = function(n) {
     return (n % 1) === 0;
 };

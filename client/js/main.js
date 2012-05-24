@@ -147,12 +147,12 @@ define(['jquery', 'app'], function($, App) {
             });
             
             $('#equipment_weapon').click(function() {
-                app.showMessage( $('#equipment_weapon').data("name"));
+                app.showMessage( $('#equipment_weapon').data("name").capitalize());
                 return false;
             });
 
             $('#equipment_armor').click(function() {
-                app.showMessage( $('#equipment_armor').data("name"));
+                app.showMessage( $('#equipment_armor').data("name").capitalize());
                 return false;
             });
                         
@@ -256,7 +256,7 @@ define(['jquery', 'app'], function($, App) {
     		game.onAchievementUnlock(function(id, name, description) {
     		    app.unlockAchievement(id, name);
     		});
-			console.log(game);
+
 		    game.onDayNightCycle(function() {
             	$('*[data-type="daynight"]').toggleClass('night');
             });

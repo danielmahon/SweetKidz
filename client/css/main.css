@@ -359,6 +359,10 @@ footer, header, hgroup, menu, nav, section {
 
     #about .link a:hover {color:#d83939;}
 
+    #equipment_weapon {width:32px;height:32px;background-size:192px;background-position:-64px;}
+    #equipment_armor {width:32px;height:32px;background-size:192px;background-position:-64px;}
+    .inventory {width:32px;height:32px;background-size:192px;background-position:-64px;border:2px solid black;float:left;margin:1px;}
+
     footer {font-family:'GraphicPixel';position:absolute;bottom:5%;left:0;text-align:center;width:100%;color:#c6c0a3;-moz-transition:0.2s opacity linear;-webkit-transition:0.2s opacity linear;-o-transition:0.2s opacity linear;-ms-transition:0.2s opacity linear;transition:0.2s opacity linear;}
     .upscaled.game footer {color:#8a8a8a;}
     
