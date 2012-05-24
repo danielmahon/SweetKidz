@@ -1067,7 +1067,14 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
                         self.showNotification("You are entering a Safe Zone!");
                     }
                 });
-                
+
+                self.client.onDayNightCycle(function(cycle, message) {
+                    self.daynight_callback();
+                    log.info("DayNight is now " + cycle);
+                	self.showNotification(message);
+
+                });
+                                
                 self.player.onArmorLoot(function(armorName) {
                     self.player.switchArmor(self.sprites[armorName]);
                 });
@@ -2414,6 +2421,10 @@ function(InfoManager, BubbleManager, Renderer, Map, Animation, Sprite, AnimatedT
     
         onNotification: function(callback) {
             this.notification_callback = callback;
+        },
+
+        onDayNightCycle: function(callback) {
+            this.daynight_callback = callback;
         },
     
         onPlayerInvincible: function(callback) {

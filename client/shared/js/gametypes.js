@@ -28,7 +28,8 @@ Types = {
         BLINK: 24,
         OPEN: 25,
         CHECK: 26,
-        PVP: 27
+        PVP: 27,
+        DAYNIGHT: 28
     },
     
     Entities: {

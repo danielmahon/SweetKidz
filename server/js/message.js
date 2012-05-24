@@ -214,11 +214,25 @@ Messages.Blink = Message.extend({
 });
 
 Messages.PVP = Message.extend({
-    init: function(isPVP) {
+    init: function(isPVP, message) {
         this.isPVP = isPVP;
+        this.message = message;
     },
     serialize: function() {
         return [Types.Messages.PVP,
-                this.isPVP];
+                this.isPVP,
+                this.message];
+    }
+});
+
+Messages.DayNight = Message.extend({
+    init: function(cycle, msg) {
+        this.cycle = cycle;
+        this.msg = msg;
+    },
+    serialize: function() {
+        return [Types.Messages.DAYNIGHT,
+                this.cycle,
+                this.msg];
     }
 });

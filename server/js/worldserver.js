@@ -30,8 +30,8 @@ module.exports = World = cls.Class.extend({
         
         this.map = null;
         this.pvpEnabled = pvpEnabled;
-        if (this.pvpEnabled === undefined)
-            this.pvpEnabled = false;
+        if (this.pvpEnabled === undefined) this.pvpEnabled = false;
+        this.cycle = 'day';
 
         this.entities = {};
         this.players = {};
@@ -209,6 +209,19 @@ module.exports = World = cls.Class.extend({
                 updateCount = 0;
             }
         }, 1000 / this.ups);
+        
+        // Day Night Cycle (10 seconds)
+        var cycleMsg;
+        setInterval(function() {
+        	if (self.cycle === 'day') {
+        		self.cycle = 'night'
+        		cycleMsg = 'Night has fallen...';
+        	} else {
+        		self.cycle = 'day';
+        		cycleMsg = 'The sun is rising...';
+        	}
+        	self.pushBroadcast(new Messages.DayNight(self.cycle, cycleMsg));
+        }, 1000*60*5);
         
         log.info(""+this.id+" created (capacity: "+this.maxPlayers+" players).");
     },

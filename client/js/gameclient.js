@@ -32,6 +32,7 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
             this.handlers[Types.Messages.HP] = this.receiveHitPoints;
             this.handlers[Types.Messages.BLINK] = this.receiveBlink;
             this.handlers[Types.Messages.PVP] = this.receivePVP;
+            this.handlers[Types.Messages.DAYNIGHT] = this.receiveDayNightCycle;
         
             this.useBison = false;
             this.enable();
@@ -381,6 +382,16 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
             }
         },
         
+        receiveDayNightCycle: function(data) {
+            var cycle = data[1],
+                message = data[2];
+        
+            if(this.daynight_callback) {
+                this.daynight_callback(cycle, message);
+            }
+        },
+
+        
         onDispatched: function(callback) {
             this.dispatched_callback = callback;
         },
@@ -475,6 +486,10 @@ define(['player', 'entityfactory', 'lib/bison'], function(Player, EntityFactory,
 
         onPVPChange: function(callback) {
             this.pvp_callback = callback;
+        },
+        
+        onDayNightCycle: function(callback) {
+            this.daynight_callback = callback;
         },
 
         sendHello: function(player, realmType) {

@@ -246,7 +246,11 @@ define(['jquery', 'app'], function($, App) {
     		game.onAchievementUnlock(function(id, name, description) {
     		    app.unlockAchievement(id, name);
     		});
-	
+			console.log(game);
+		    game.onDayNightCycle(function() {
+            	$('*[data-type="daynight"]').toggleClass('night');
+            });
+
     		game.onNotification(function(message) {
     		    app.showMessage(message);
     		});

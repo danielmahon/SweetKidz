@@ -278,7 +278,17 @@ footer, header, hgroup, menu, nav, section {
    		background: red;
    		clear: left;
    	}
-   
+    
+    *[data-type="daynight"] {
+        -webkit-transition: opacity 0.5s ease-in-out;
+        opacity: 0;
+        width: 100%;
+        background: #000;
+    }
+    *[data-type="daynight"].night {
+        opacity: 0.5;
+    }
+    
     .bubble p {-moz-user-select:none;-webkit-user-select:none;}
     
     #instructions {position:absolute;top:50%;left:50%;z-index:1000;font-family:'GraphicPixel';pointer-events:none;opacity:0;-moz-transition:0.25s opacity linear;-webkit-transition:0.4s top ease, 0.4s opacity linear;-o-transition:0.4s top ease, 0.4s opacity linear;-ms-transition:0.4s top ease, 0.4s opacity linear;transition:0.4s top ease, 0.4s opacity linear;}
