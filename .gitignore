@@ -7,3 +7,4 @@ config.json
 client/audio/music
 .DS_Store
 *.swp
+*.log
